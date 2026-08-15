@@ -240,7 +240,7 @@
         ]);
 
         // 迷思挑戰關卡狀態 (Step 3 專用)
-        const [mythStageIndex, setMythStageIndex] = useState(0); // 0~6 對應 7 關
+        const [mythStageIndex, setMythStageIndex] = useState(0);
         const [currentBagWeight, setCurrentBagWeight] = useState(3.5);
         const [selectedWaterOpt, setSelectedWaterOpt] = useState('w_b');
         const [noodleChecked, setNoodleChecked] = useState(['need_water']);
@@ -249,7 +249,7 @@
         const [selectedMedOpt, setSelectedMedOpt] = useState('med_b');
         const [selectedDocOpt, setSelectedDocOpt] = useState('doc_b');
         
-        // 迷思 7 減重清單狀態 (初始 28.6 kg)
+        // 迷思 7 減重清單狀態
         const [heavyItems, setHeavyItems] = useState(MYTH_STAGES_DATA[6].heavyItemsList);
         const [showMythReveal, setShowMythReveal] = useState(false);
 
@@ -270,7 +270,6 @@
         const waterRequirementMl = userWeight * 15 * 3;
         const waterRequirementKg = (waterRequirementMl / 1000).toFixed(2);
 
-        // 計算減重總量 (迷思 7)
         const totalHeavyWeight = heavyItems.reduce((sum, item) => sum + item.weightKg, 0);
 
         const STEPS = [
@@ -284,7 +283,6 @@
           { id: 7, label: '完成計畫', icon: '🛡️' }
         ];
 
-        // 移除重物 (迷思 7)
         const removeHeavyItem = (id) => {
           setHeavyItems(heavyItems.filter(item => item.id !== id));
         };
@@ -312,7 +310,7 @@
 
             {/* Main Content */}
             <main className="max-w-4xl mx-auto p-4 md:p-6 flex-1 w-full space-y-6">
-              {/* PAGE 0: HERO */}
+              {/* PAGE 0: HERO (移除多餘底部「下一步」按鈕，只保留中間亮眼的核心 CTA 按鈕) */}
               {currentStep === 0 && (
                 <div className="space-y-6 text-center py-2">
                   <div className="bg-linear-to-b from-orange-100 via-amber-50 to-white p-8 md:p-12 rounded-3xl border border-orange-200 shadow-xs space-y-6">
@@ -457,10 +455,9 @@
                 </div>
               )}
 
-              {/* PAGE 3: GO-BAG MYTH CHALLENGE (核心互動模組) */}
+              {/* PAGE 3: GO-BAG MYTH CHALLENGE */}
               {currentStep === 3 && (
                 <div className="space-y-6">
-                  {/* 頁面標題與副標 */}
                   <div className="space-y-1">
                     <h2 className="text-2xl md:text-3xl font-bold text-stone-900 flex items-center gap-2">
                       <span>🎒</span>
@@ -471,7 +468,7 @@
                     </p>
                   </div>
 
-                  {/* 即時重量儀表板 (Weight Meter) */}
+                  {/* 即時重量儀表板 */}
                   <div className="bg-stone-900 text-white p-4 rounded-2xl space-y-2 shadow-md">
                     <div className="flex items-center justify-between text-xs">
                       <span className="font-bold text-amber-400">🎒 我的避難包負重儀表</span>
@@ -498,7 +495,7 @@
                     </div>
                   </div>
 
-                  {/* 7 大迷思關卡控制器 */}
+                  {/* 7 大迷思關卡 */}
                   {mythStageIndex < 7 && (
                     <div className="bubble-card p-6 space-y-5">
                       <div className="flex items-center justify-between border-b pb-3">
@@ -536,7 +533,7 @@
                         </div>
                       )}
 
-                      {/* 關卡 2: 泡麵條件勾選 */}
+                      {/* 關卡 2: 泡麵條件 */}
                       {mythStageIndex === 1 && (
                         <div className="space-y-3 text-xs">
                           <div className="font-bold text-stone-900">🍜 把泡麵放入背包 (+0.3kg) 後，你還需要勾選哪些東西才能順利吃掉它？</div>
@@ -631,7 +628,7 @@
                         </div>
                       )}
 
-                      {/* 關卡 7: 28.6 kg 超重拯救減重大作戰 */}
+                      {/* 關卡 7: 28.6 kg 超重拯救 */}
                       {mythStageIndex === 6 && (
                         <div className="space-y-4 text-xs">
                           <div className="bg-rose-50 p-4 rounded-2xl border border-rose-300 space-y-2">
@@ -664,7 +661,7 @@
                         </div>
                       )}
 
-                      {/* 揭曉與小橘書摘要區 */}
+                      {/* 揭曉小橘書摘要區 */}
                       {showMythReveal && (
                         <div className="bg-amber-50 p-5 rounded-2xl border border-amber-300 space-y-3 text-xs">
                           <div className="font-bold text-amber-950 text-sm flex items-center gap-1.5">
@@ -680,7 +677,6 @@
                         </div>
                       )}
 
-                      {/* 切換下一步按鈕 */}
                       <div className="flex justify-end pt-2">
                         <button
                           onClick={() => {
@@ -688,7 +684,7 @@
                             if (mythStageIndex < 6) {
                               setMythStageIndex(mythStageIndex + 1);
                             } else {
-                              setMythStageIndex(7); // 進入三問法與對照
+                              setMythStageIndex(7);
                             }
                           }}
                           className="cute-btn px-6 py-2.5 bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs md:text-sm cursor-pointer shadow-md"
@@ -699,10 +695,9 @@
                     </div>
                   )}
 
-                  {/* 完成 7 大迷思後的學習總結、三問法與前後對照卡 */}
+                  {/* 完成 7 大迷思後的學習總結 */}
                   {mythStageIndex >= 7 && (
                     <div className="space-y-6">
-                      {/* 學習總結標語 */}
                       <div className="bubble-card p-6 text-center space-y-3">
                         <span className="text-4xl">🧠</span>
                         <h3 className="text-2xl font-bold text-stone-900">你剛剛學到一件極為重要的事情！</h3>
@@ -764,42 +759,7 @@
                         </div>
                       </div>
 
-                      {/* 開放性反思思考題 */}
-                      <div className="bg-white p-5 rounded-2xl border border-stone-200 space-y-4 text-xs font-normal">
-                        <div className="font-bold text-stone-900 text-sm border-b pb-2">💭 防災情境反思問題：</div>
-                        
-                        <div className="space-y-1">
-                          <label className="block text-stone-800 font-bold">1. 如果你只能再增加 1 公斤物資，你會選什麼？</label>
-                          <input
-                            type="text"
-                            value={reflectionOne}
-                            onChange={(e) => setReflectionOne(e.target.value)}
-                            className="w-full p-2.5 bg-stone-50 border border-stone-200 rounded-xl font-normal"
-                          />
-                        </div>
-
-                        <div className="space-y-1">
-                          <label className="block text-stone-800 font-bold">2. 如果你必須再減少 2 公斤，你會拿掉什麼？</label>
-                          <input
-                            type="text"
-                            value={reflectionTwo}
-                            onChange={(e) => setReflectionTwo(e.target.value)}
-                            className="w-full p-2.5 bg-stone-50 border border-stone-200 rounded-xl font-normal"
-                          />
-                        </div>
-
-                        <div className="space-y-1">
-                          <label className="block text-stone-800 font-bold">3. 如果家中有老人、幼兒或長照需求者，你的選擇會改變嗎？</label>
-                          <textarea
-                            rows={2}
-                            value={reflectionThree}
-                            onChange={(e) => setReflectionThree(e.target.value)}
-                            className="w-full p-2.5 bg-stone-50 border border-stone-200 rounded-xl font-normal"
-                          />
-                        </div>
-                      </div>
-
-                      {/* 前後重量與物資對照卡 */}
+                      {/* 前後對照卡 */}
                       <div className="bubble-card p-6 space-y-4">
                         <div className="font-bold text-stone-900 text-base border-b pb-2 text-center md:text-left">
                           📊 你的避難包改變了（前後對照卡）
@@ -957,7 +917,6 @@
                     <p className="text-xs text-stone-500 font-normal">產出日期：{new Date().toLocaleDateString('zh-TW')} ｜ 依據《臺灣全民安全指引》（小橘書）規範製作</p>
                   </div>
 
-                  {/* 1. 成員表 */}
                   <div className="space-y-2 text-xs">
                     <h3 className="font-bold text-stone-900 text-sm border-b pb-1">一、家庭成員數值與特殊照顧需求對照表</h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
@@ -970,7 +929,6 @@
                     </div>
                   </div>
 
-                  {/* 2. 前後迷思反思對照 */}
                   <div className="space-y-2 text-xs">
                     <h3 className="font-bold text-stone-900 text-sm border-b pb-1">二、避難包迷思挑戰學習對照</h3>
                     <div className="p-3 bg-amber-50 rounded-xl border border-amber-200 space-y-1 font-normal text-stone-800">
@@ -981,7 +939,6 @@
                     </div>
                   </div>
 
-                  {/* 3. 實體集合點 */}
                   <div className="space-y-2 text-xs">
                     <h3 className="font-bold text-stone-900 text-sm border-b pb-1">三、家庭實體集合點與斷訊默契</h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -1006,28 +963,28 @@
               )}
             </main>
 
-            {/* Navigation Footer */}
-            <footer className="sticky bottom-0 bg-white/95 border-t border-amber-200 p-3.5 backdrop-blur-md z-30 shadow-md">
-              <div className="max-w-4xl mx-auto flex items-center justify-between gap-3">
-                {currentStep > 0 ? (
+            {/* Navigation Footer (只在 currentStep > 0 時顯示，避免首頁重複出現多的「下一步」按鈕) */}
+            {currentStep > 0 && (
+              <footer className="sticky bottom-0 bg-white/95 border-t border-amber-200 p-3.5 backdrop-blur-md z-30 shadow-md">
+                <div className="max-w-4xl mx-auto flex items-center justify-between gap-3">
                   <button
                     onClick={() => { setCurrentStep(currentStep - 1); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
                     className="cute-btn px-5 py-2.5 border border-stone-300 text-stone-700 bg-white hover:bg-stone-50 text-xs font-medium cursor-pointer"
                   >
                     ← 上一步
                   </button>
-                ) : <div />}
 
-                {currentStep < 7 && (
-                  <button
-                    onClick={() => { setCurrentStep(currentStep + 1); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                    className="cute-btn ml-auto px-7 py-2.5 bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white font-bold text-sm md:text-base shadow-md cursor-pointer flex items-center gap-1.5"
-                  >
-                    <span>下一步 →</span>
-                  </button>
-                )}
-              </div>
-            </footer>
+                  {currentStep < 7 && (
+                    <button
+                      onClick={() => { setCurrentStep(currentStep + 1); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                      className="cute-btn ml-auto px-7 py-2.5 bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white font-bold text-sm md:text-base shadow-md cursor-pointer flex items-center gap-1.5"
+                    >
+                      <span>下一步 →</span>
+                    </button>
+                  )}
+                </div>
+              </footer>
+            )}
           </div>
         );
       }
