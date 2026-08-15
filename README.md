@@ -78,7 +78,7 @@ git add .
 git commit -m "feat: complete My Family Emergency Safety Plan application"
 
 # 3. 連接至您的 GitHub 遠端 Repository
-git remote add origin https://github.com/YOUR_GITHUB_USERNAME/taiwan-family-emergency-plan.git
+git remote add origin https://github.com/t199-glitch/taiwan-family-emergency-plan.git
 git branch -M main
 git push -u origin main
 ```
