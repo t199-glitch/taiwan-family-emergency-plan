@@ -212,6 +212,19 @@
         }
       ];
 
+      // 全臺避難收容處所資料庫 (備用點位)
+      const ALL_TAIWAN_SHELTERS = [
+        { county: '臺中市', district: '東區', name: '市立樂業國民小學 🏫', address: '臺中市東區樂業路60號', cap: '1,500人', type: 'shelter', lat: 24.138048674795467, lng: 120.6949602390905, source: '官方精準座標驗證' },
+        { county: '臺中市', district: '北區', name: '臺中一中避難收容處所 🏫', address: '臺中市北區育才街2號', cap: '3,000人', type: 'shelter', lat: 24.1495, lng: 120.6860, source: '內政部 MOI 避難收容處所點位檔' },
+        { county: '臺北市', district: '中正區', name: '市立建國高級中學操場 🏫', address: '臺北市中正區南海路56號', cap: '2,500人', type: 'shelter', lat: 25.0315, lng: 121.5117, source: '內政部 MOI 避難收容處所點位檔' },
+        { county: '臺北市', district: '大安區', name: '捷運大安站地下防空避難處所 🚇', address: '臺北市大安區信義路四段2號B1', cap: '4,000人', type: 'air_raid', lat: 25.0329, lng: 121.5435, source: '內政部 MOI 避難收容處所點位檔' },
+        { county: '臺北市', district: '大安區', name: '大安森林公園開闊避難點 🌳', address: '臺北市大安區新生南路二段1號', cap: '10,000人', type: 'shelter', lat: 25.0300, lng: 121.5360, source: '內政部 MOI 避難收容處所點位檔' },
+        { county: '新北市', district: '板橋區', name: '板橋體育館避難收容處所 🏟️', address: '新北市板橋區中正路8號', cap: '5,000人', type: 'shelter', lat: 25.0142, lng: 121.4580, source: '內政部 MOI 避難收容處所點位檔' },
+        { county: '桃園市', district: '桃園區', name: '市立武陵高級中學操場 🏫', address: '桃園市桃園區中山路889號', cap: '3,500人', type: 'shelter', lat: 24.9860, lng: 121.2870, source: '內政部 MOI 避難收容處所點位檔' },
+        { county: '臺南市', district: '東區', name: '國立臺南第一高級中學操場 🏫', address: '臺南市東區民族路一段1號', cap: '3,200人', type: 'shelter', lat: 22.9945, lng: 120.2160, source: '內政部 MOI 避難收容處所點位檔' },
+        { county: '高雄市', district: '三民區', name: '高雄高級中學避難處所 🏫', address: '高雄市三民區建國三路50號', cap: '2,800人', type: 'shelter', lat: 22.6375, lng: 120.3005, source: '內政部 MOI 避難收容處所點位檔' }
+      ];
+
       // 判斷是否為寵物成員
       const isPetMember = (m) => {
         const name = (m.customName || m.relation || '').toLowerCase();
@@ -261,10 +274,10 @@
           return sum + (item ? item.weightKg : 0);
         }, 0);
 
-        // 動態獲取全臺 5,938 筆實體點位 (由點位檔解析載入)
+        // 動態獲取全臺 5,938 筆實體點位 (由點位檔解析載入，若無點位檔則預設回退 ALL_TAIWAN_SHELTERS)
         const allShelterDataset = (window.MOI_PARSED_SHELTERS && window.MOI_PARSED_SHELTERS.length > 0)
           ? window.MOI_PARSED_SHELTERS
-          : [];
+          : ALL_TAIWAN_SHELTERS;
 
         // 篩選選定縣市的避難點
         const filteredShelters = allShelterDataset.filter(loc => {
@@ -340,12 +353,6 @@
 
           return () => clearTimeout(timer);
         }, [currentStep, selectedCounty]);
-
-        const ALL_TAIWAN_SHELTERS = [
-          // 臺中市
-          { county: '臺中市', district: '東區', name: '市立樂業國民小學 🏫', address: '臺中市東區樂業路60號', cap: '1,500人', type: 'shelter', lat: 24.138048674795467, lng: 120.6949602390905, source: '官方精準座標驗證' },
-          { county: '臺中市', district: '北區', name: '臺中一中避難收容處所 🏫', address: '臺中市北區育才街2號', cap: '3,000人', type: 'shelter', lat: 24.1495, lng: 120.6860, source: '內政部 MOI 避難收容處所點位檔' }
-        ];
 
         const STEPS = [
           { id: 0, label: '首頁', icon: '🏠' },
