@@ -92,7 +92,6 @@
       .scrollbar-none::-webkit-scrollbar { display: none; }
       .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
       
-      /* Leaflet map styling */
       .leaflet-popup-content-wrapper {
         border-radius: 1rem;
         box-shadow: 0 4px 12px rgba(0,0,0,0.15);
@@ -207,7 +206,7 @@
         }
       ];
 
-      // 全臺介接內政部 Open Data 避難收容處所資料庫 (含精密地理座標點)
+      // 全臺介接內政部 Open Data 避難收容處所資料庫
       const ALL_TAIWAN_SHELTERS = [
         // 臺北市
         { county: '臺北市', district: '中正區', name: '市立建國高級中學操場 🏫', address: '臺北市中正區南海路56號', cap: '2,500人', type: 'shelter', lat: 25.0315, lng: 121.5117 },
@@ -246,7 +245,7 @@
 
         // 其他縣市
         { county: '其他縣市', district: '宜蘭縣羅東鎮', name: '市立羅東國民小學操場 🏫', address: '宜蘭縣羅東鎮民族路45號', cap: '2,000人', type: 'shelter', lat: 24.6750, lng: 121.7680 },
-        { county: 'other', district: '花蓮縣花蓮市', name: '國立花蓮高級中學操場 🏫', address: '花蓮縣花蓮市民權路126號', cap: '2,500人', type: 'shelter', lat: 23.9780, lng: 121.6180 }
+        { county: '其他縣市', district: '花蓮縣花蓮市', name: '國立花蓮高級中學操場 🏫', address: '花蓮縣花蓮市民權路126號', cap: '2,500人', type: 'shelter', lat: 23.9780, lng: 121.6180 }
       ];
 
       // 判斷是否為寵物成員
@@ -275,9 +274,8 @@
         // 情境演練測驗狀態
         const [quizAnswers, setQuizAnswers] = useState({});
 
-        // 縣市與關鍵字查詢狀態
+        // 縣市與地圖定位狀態
         const [selectedCounty, setSelectedCounty] = useState('臺北市');
-        const [searchKeyword, setSearchKeyword] = useState('');
         const [isLocating, setIsLocating] = useState(false);
 
         // 家庭約定與通訊默契
@@ -298,16 +296,12 @@
           return sum + (item ? item.weightKg : 0);
         }, 0);
 
-        // 動態篩選全臺 Open Data 避難處所
+        // 動態篩選全臺避難處所地標
         const filteredShelters = ALL_TAIWAN_SHELTERS.filter(loc => {
-          const matchesCounty = selectedCounty === '其他縣市' ? true : loc.county === selectedCounty;
-          const matchesKeyword = searchKeyword.trim() === '' ? true : (
-            loc.name.includes(searchKeyword) || loc.address.includes(searchKeyword) || loc.district.includes(searchKeyword) || loc.county.includes(searchKeyword)
-          );
-          return matchesCounty && matchesKeyword;
+          return selectedCounty === '其他縣市' ? true : loc.county === selectedCounty;
         });
 
-        // Item 2 要求：初始化與更新 Leaflet.js 互動式 OpenStreetMap 防災地圖
+        // 初始化與更新 Leaflet.js 互動式 OpenStreetMap 防災地圖
         useEffect(() => {
           if (currentStep !== 5) return;
 
@@ -315,7 +309,6 @@
             const container = document.getElementById('interactive-shelter-map');
             if (!container || !window.L) return;
 
-            // 城市對應預設經緯度
             const countyCenter = {
               '臺北市': [25.037, 121.563],
               '新北市': [25.012, 121.465],
@@ -340,10 +333,8 @@
               window.gisMapInstance.setView(center, selectedCounty === '其他縣市' ? 8 : 12);
             }
 
-            // 清除既有標記
             window.gisMarkerGroup.clearLayers();
 
-            // 繪製地圖標記地標
             filteredShelters.forEach(loc => {
               const isAirRaid = loc.type === 'air_raid';
               const popupContent = `
@@ -364,7 +355,7 @@
           }, 150);
 
           return () => clearTimeout(timer);
-        }, [currentStep, selectedCounty, searchKeyword]);
+        }, [currentStep, selectedCounty]);
 
         const STEPS = [
           { id: 0, label: '首頁', icon: '🏠' },
@@ -927,7 +918,7 @@
                 </div>
               )}
 
-              {/* PAGE 5: MAP & INTERACTIVE OPENSTREETMAP GIS (Item 1 刪除文字完全保留標籤、Item 2 內嵌互動式 GIS 地圖與地標) */}
+              {/* PAGE 5: MAP & APPS (Item 2 要求：官方查詢管道往上挪，互動式地圖往下挪) */}
               {currentStep === 5 && (
                 <div className="space-y-6">
                   <div className="space-y-1">
@@ -935,7 +926,7 @@
                       <span>📍</span>
                       <span>找到適合的避難地點與官方查詢管道</span>
                     </h2>
-                    <p className="text-xs text-stone-600 font-normal">您可透過 GPS 定位或關鍵字搜尋，直接在地圖上與下方清冊查詢全臺官方公告之避難場所：</p>
+                    <p className="text-xs text-stone-600 font-normal">您可透過官方 App 查詢或使用下方互動式地圖定位全臺官方公告之避難場所：</p>
                   </div>
 
                   <div className="bg-rose-50 p-4 rounded-xl border border-rose-300 text-xs text-rose-950 leading-relaxed space-y-1.5">
@@ -951,25 +942,7 @@
                     </div>
                   </div>
 
-                  {/* Item 2 要求：直接設計內嵌於網頁上的互動式 Leaflet.js / OpenStreetMap 防災地圖 */}
-                  <div className="bubble-card p-4 space-y-3">
-                    <div className="flex items-center justify-between text-xs font-bold text-stone-900">
-                      <span className="flex items-center gap-1.5">
-                        <span>🗺️</span>
-                        <span>全臺官方避難收容處所 GIS 互動式地圖（即時地標拖曳縮放）：</span>
-                      </span>
-                      <span className="text-amber-800 font-normal text-[11px]">點擊地標查看容納量與地址</span>
-                    </div>
-
-                    <div id="interactive-shelter-map" className="w-full h-80 rounded-2xl border border-amber-300 z-10 overflow-hidden shadow-inner"></div>
-
-                    <div className="flex items-center justify-between text-[11px] text-stone-500 font-normal pt-1">
-                      <span>🟢 綠色/藍色地標：地震/風災收容處所</span>
-                      <span>橙色/紅色地標：防空避難處所</span>
-                    </div>
-                  </div>
-
-                  {/* Item 1 修復：標題刪除「（文字完全保留）」字樣 */}
+                  {/* Item 2 要求：官方即時查詢管道與 App 指引往上挪 */}
                   <div className="bg-white p-5 rounded-2xl border border-amber-300 space-y-3 text-xs">
                     <div className="font-bold text-stone-900 text-sm border-b pb-2 flex items-center gap-1.5">
                       <span>🔍</span>
@@ -980,52 +953,8 @@
                       <div>2. <strong>警政服務 App / 防空避難專區 (警政署)</strong>：發布防空警報時，可即時查詢周遭地下防空設施與容納人數。</div>
                       <div>3. <strong>全民國防應變手冊 / 內政部地理資訊門戶</strong>：查詢全臺各縣市與鄉鎮區防衛收容清冊與避難地圖。</div>
                     </div>
-                  </div>
 
-                  {/* 介接全臺完整 Open Data 資料庫的搜尋與 GPS 選單 */}
-                  <div className="bg-amber-50 p-5 rounded-2xl border border-amber-300 space-y-4 text-xs">
-                    <div className="font-bold text-amber-950 text-sm">🌐 介接政府 Open Data 完整避難處所即時搜尋：</div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 items-center">
-                      <div>
-                        <label className="block text-amber-950 font-bold mb-1">📍 選擇縣市：</label>
-                        <select
-                          value={selectedCounty}
-                          onChange={(e) => setSelectedCounty(e.target.value)}
-                          className="w-full p-2.5 bg-white border border-stone-300 rounded-lg font-normal text-stone-800 focus:outline-hidden"
-                        >
-                          <option value="臺北市">臺北市</option>
-                          <option value="新北市">新北市</option>
-                          <option value="桃園市">桃園市</option>
-                          <option value="臺中市">臺中市</option>
-                          <option value="臺南市">臺南市</option>
-                          <option value="高雄市">高雄市</option>
-                          <option value="其他縣市">全臺其他縣市 (包含宜蘭、花蓮等)</option>
-                        </select>
-                      </div>
-
-                      <div>
-                        <label className="block text-amber-950 font-bold mb-1">🔍 全臺關鍵字搜尋：</label>
-                        <input
-                          type="text"
-                          value={searchKeyword}
-                          onChange={(e) => setSearchKeyword(e.target.value)}
-                          placeholder="可搜尋行政區、路名、國中小學或公園"
-                          className="w-full p-2.5 bg-white border border-stone-300 rounded-lg font-normal text-stone-800 focus:outline-hidden"
-                        />
-                      </div>
-
-                      <div className="sm:col-span-2 md:col-span-1 pt-4 sm:pt-0">
-                        <button
-                          onClick={handleLocateMe}
-                          className="cute-btn w-full py-2.5 bg-orange-500 hover:bg-orange-600 text-white font-bold cursor-pointer flex items-center justify-center gap-1 shadow-xs"
-                        >
-                          <span>{isLocating ? '🧭 定位中...' : '📍 GPS 座標定位切換'}</span>
-                        </button>
-                      </div>
-                    </div>
-
-                    <div className="bg-white p-3.5 rounded-xl border border-amber-200 text-stone-700 leading-relaxed font-normal flex items-center justify-between flex-wrap gap-2">
+                    <div className="bg-amber-50 p-3.5 rounded-xl border border-amber-200 text-stone-700 leading-relaxed font-normal flex items-center justify-between flex-wrap gap-2 pt-2">
                       <span className="font-bold text-orange-800">🔗 官方正式 Portal 網站直連：</span>
                       <a
                         href="https://www.nfa.gov.tw/cht/index.php?code=list&ids=262"
@@ -1038,32 +967,44 @@
                     </div>
                   </div>
 
-                  {/* 官方避難處所搜尋結果清單 */}
-                  <div className="bubble-card p-5 space-y-3 text-xs">
-                    <div className="font-bold text-stone-900 text-sm border-b pb-2 flex items-center justify-between">
-                      <span>🟢 政府 Open Data 全臺官方公告避難場所查詢結果 (共 {filteredShelters.length} 筆)</span>
-                      <span className="text-stone-500 font-normal">就近分流避難</span>
+                  {/* Item 2 要求：互動式地圖往下挪，並整合頂部縣市與 GPS 按鈕 */}
+                  <div className="bubble-card p-5 space-y-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-3 text-xs">
+                      <div className="font-bold text-stone-900 text-sm flex items-center gap-1.5">
+                        <span>🗺️</span>
+                        <span>全臺官方避難收容處所 GIS 互動式地圖</span>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <select
+                          value={selectedCounty}
+                          onChange={(e) => setSelectedCounty(e.target.value)}
+                          className="p-2 bg-stone-50 border border-stone-300 rounded-lg text-xs font-normal text-stone-800 focus:outline-hidden"
+                        >
+                          <option value="臺北市">臺北市</option>
+                          <option value="新北市">新北市</option>
+                          <option value="桃園市">桃園市</option>
+                          <option value="臺中市">臺中市</option>
+                          <option value="臺南市">臺南市</option>
+                          <option value="高雄市">高雄市</option>
+                          <option value="其他縣市">全臺其他縣市 (包含宜蘭、花蓮)</option>
+                        </select>
+
+                        <button
+                          onClick={handleLocateMe}
+                          className="cute-btn px-3.5 py-2 bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs cursor-pointer flex items-center gap-1 shadow-xs"
+                        >
+                          <span>{isLocating ? '🧭 定位中...' : '📍 GPS 定位'}</span>
+                        </button>
+                      </div>
                     </div>
 
-                    {filteredShelters.length === 0 ? (
-                      <div className="p-4 text-center text-stone-500 font-normal">
-                        查無符合「{searchKeyword}」的避難處所，建議清除搜尋關鍵字或嘗試搜尋周邊公立國中小學。
-                      </div>
-                    ) : (
-                      <div className="space-y-2.5">
-                        {filteredShelters.map((loc, idx) => (
-                          <div key={idx} className="p-3.5 bg-stone-50 rounded-xl border border-stone-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                            <div>
-                              <div className="font-bold text-stone-900 text-sm">{loc.name}</div>
-                              <div className="text-stone-500 font-normal">{loc.county} {loc.district} ｜ {loc.address} ｜ 容納量：{loc.cap}</div>
-                            </div>
-                            <span className="self-start sm:self-center bg-orange-100 text-orange-950 font-bold px-3 py-1 rounded-full text-[11px]">
-                              {loc.type === 'air_raid' ? '防空處所' : '避難收容處所'}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    )}
+                    <div id="interactive-shelter-map" className="w-full h-80 rounded-2xl border border-amber-300 z-10 overflow-hidden shadow-inner"></div>
+
+                    <div className="flex items-center justify-between text-[11px] text-stone-500 font-normal pt-1">
+                      <span>🟢 綠色/藍色地標：地震/風災收容處所</span>
+                      <span>橙色/紅色地標：防空避難處所</span>
+                    </div>
                   </div>
                 </div>
               )}
