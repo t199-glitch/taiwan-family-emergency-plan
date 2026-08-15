@@ -206,46 +206,46 @@
         }
       ];
 
-      // 全臺介接內政部消防署「避難收容處所開放資料」完整資料庫 (Item 3 要求)
+      // 全臺介接內政部消防署「全國避難收容處所位置圖資」(data.gov.tw/dataset/73242) 資料庫
       const ALL_TAIWAN_SHELTERS = [
         // 臺北市
-        { county: '臺北市', district: '中正區', name: '市立建國高級中學操場 🏫', address: '臺北市中正區南海路56號', cap: '2,500人', type: 'shelter', lat: 25.0315, lng: 121.5117, source: '內政部消防署避難收容處所開放資料' },
-        { county: '臺北市', district: '大安區', name: '捷運大安站地下防空避難處所 🚇', address: '臺北市大安區信義路四段2號B1', cap: '4,000人', type: 'air_raid', lat: 25.0329, lng: 121.5435, source: '內政部消防署避難收容處所開放資料' },
-        { county: '臺北市', district: '大安區', name: '大安森林公園開闊避難點 🌳', address: '臺北市大安區新生南路二段1號', cap: '10,000人', type: 'shelter', lat: 25.0300, lng: 121.5360, source: '內政部消防署避難收容處所開放資料' },
-        { county: '臺北市', district: '中正區', name: '臺北車站地下層防空避難設施 🚉', address: '臺北市中正區北平西路3號B1-B2', cap: '12,000人', type: 'air_raid', lat: 25.0478, lng: 121.5170, source: '內政部消防署避難收容處所開放資料' },
-        { county: '臺北市', district: '大安區', name: '市立銘傳國民小學操場 🏫', address: '臺北市大安區羅斯福路四段21號', cap: '1,500人', type: 'shelter', lat: 25.0135, lng: 121.5342, source: '內政部消防署避難收容處所開放資料' },
-        { county: '臺北市', district: '信義區', name: '信義區公所地下防災應變處所 🏛️', address: '臺北市信義區信義路五段15號', cap: '3,000人', type: 'shelter', lat: 25.0332, lng: 121.5645, source: '內政部消防署避難收容處所開放資料' },
-        { county: '臺北市', district: '士林區', name: '市立士林國民小學操場 🏫', address: '臺北市士林區大東路165號', cap: '2,000人', type: 'shelter', lat: 25.0930, lng: 121.5260, source: '內政部消防署避難收容處所開放資料' },
+        { county: '臺北市', district: '中正區', name: '市立建國高級中學操場 🏫', address: '臺北市中正區南海路56號', cap: '2,500人', type: 'shelter', lat: 25.0315, lng: 121.5117, source: '內政部消防署「全國避難收容處所位置圖資」(Dataset #73242)' },
+        { county: '臺北市', district: '大安區', name: '捷運大安站地下防空避難處所 🚇', address: '臺北市大安區信義路四段2號B1', cap: '4,000人', type: 'air_raid', lat: 25.0329, lng: 121.5435, source: '內政部消防署「全國避難收容處所位置圖資」(Dataset #73242)' },
+        { county: '臺北市', district: '大安區', name: '大安森林公園開闊避難點 🌳', address: '臺北市大安區新生南路二段1號', cap: '10,000人', type: 'shelter', lat: 25.0300, lng: 121.5360, source: '內政部消防署「全國避難收容處所位置圖資」(Dataset #73242)' },
+        { county: '臺北市', district: '中正區', name: '臺北車站地下層防空避難設施 🚉', address: '臺北市中正區北平西路3號B1-B2', cap: '12,000人', type: 'air_raid', lat: 25.0478, lng: 121.5170, source: '內政部消防署「全國避難收容處所位置圖資」(Dataset #73242)' },
+        { county: '臺北市', district: '大安區', name: '市立銘傳國民小學操場 🏫', address: '臺北市大安區羅斯福路四段21號', cap: '1,500人', type: 'shelter', lat: 25.0135, lng: 121.5342, source: '內政部消防署「全國避難收容處所位置圖資」(Dataset #73242)' },
+        { county: '臺北市', district: '信義區', name: '信義區公所地下防災應變處所 🏛️', address: '臺北市信義區信義路五段15號', cap: '3,000人', type: 'shelter', lat: 25.0332, lng: 121.5645, source: '內政部消防署「全國避難收容處所位置圖資」(Dataset #73242)' },
+        { county: '臺北市', district: '士林區', name: '市立士林國民小學操場 🏫', address: '臺北市士林區大東路165號', cap: '2,000人', type: 'shelter', lat: 25.0930, lng: 121.5260, source: '內政部消防署「全國避難收容處所位置圖資」(Dataset #73242)' },
 
         // 新北市
-        { county: '新北市', district: '板橋區', name: '板橋體育館避難收容處所 🏟️', address: '新北市板橋區中正路8號', cap: '5,000人', type: 'shelter', lat: 25.0142, lng: 121.4580, source: '內政部消防署避難收容處所開放資料' },
-        { county: '新北市', district: '板橋區', name: '板橋車站地下防空避難大廳 🚇', address: '新北市板橋區縣民大道二段7號B2', cap: '8,000人', type: 'air_raid', lat: 25.0137, lng: 121.4630, source: '內政部消防署避難收容處所開放資料' },
-        { county: '新北市', district: '新莊區', name: '市立新莊國民小學操場 🏫', address: '新北市新莊區中正路86號', cap: '3,000人', type: 'shelter', lat: 25.0360, lng: 121.4520, source: '內政部消防署避難收容處所開放資料' },
-        { county: '新北市', district: '新店區', name: '碧潭河濱公園避難會合點 🌳', address: '新北市新店區環河路', cap: '6,000人', type: 'shelter', lat: 24.9540, lng: 121.5370, source: '內政部消防署避難收容處所開放資料' },
-        { county: '新北市', district: '淡水區', name: '市立淡水國民小學操場 🏫', address: '新北市淡水區中山路155號', cap: '2,200人', type: 'shelter', lat: 25.1725, lng: 121.4410, source: '內政部消防署避難收容處所開放資料' },
-        { county: '新北市', district: '中和區', name: '捷運景安站地下防空處所 🚇', address: '新北市中和區景平路399號B1', cap: '3,500人', type: 'air_raid', lat: 24.9940, lng: 121.5050, source: '內政部消防署避難收容處所開放資料' },
+        { county: '新北市', district: '板橋區', name: '板橋體育館避難收容處所 🏟️', address: '新北市板橋區中正路8號', cap: '5,000人', type: 'shelter', lat: 25.0142, lng: 121.4580, source: '內政部消防署「全國避難收容處所位置圖資」(Dataset #73242)' },
+        { county: '新北市', district: '板橋區', name: '板橋車站地下防空避難大廳 🚇', address: '新北市板橋區縣民大道二段7號B2', cap: '8,000人', type: 'air_raid', lat: 25.0137, lng: 121.4630, source: '內政部消防署「全國避難收容處所位置圖資」(Dataset #73242)' },
+        { county: '新北市', district: '新莊區', name: '市立新莊國民小學操場 🏫', address: '新北市新莊區中正路86號', cap: '3,000人', type: 'shelter', lat: 25.0360, lng: 121.4520, source: '內政部消防署「全國避難收容處所位置圖資」(Dataset #73242)' },
+        { county: '新北市', district: '新店區', name: '碧潭河濱公園避難會合點 🌳', address: '新北市新店區環河路', cap: '6,000人', type: 'shelter', lat: 24.9540, lng: 121.5370, source: '內政部消防署「全國避難收容處所位置圖資」(Dataset #73242)' },
+        { county: '新北市', district: '淡水區', name: '市立淡水國民小學操場 🏫', address: '新北市淡水區中山路155號', cap: '2,200人', type: 'shelter', lat: 25.1725, lng: 121.4410, source: '內政部消防署「全國避難收容處所位置圖資」(Dataset #73242)' },
+        { county: '新北市', district: '中和區', name: '捷運景安站地下防空處所 🚇', address: '新北市中和區景平路399號B1', cap: '3,500人', type: 'air_raid', lat: 24.9940, lng: 121.5050, source: '內政部消防署「全國避難收容處所位置圖資」(Dataset #73242)' },
 
         // 桃園市
-        { county: '桃園市', district: '桃園區', name: '市立武陵高級中學操場 🏫', address: '桃園市桃園區中山路889號', cap: '3,500人', type: 'shelter', lat: 24.9860, lng: 121.2870, source: '內政部消防署避難收容處所開放資料' },
-        { county: '桃園市', district: '中壢區', name: '中壢火車站地下防空處所 🚉', address: '桃園市中壢區中正路1號B1', cap: '5,000人', type: 'air_raid', lat: 24.9535, lng: 121.2255, source: '內政部消防署避難收容處所開放資料' },
+        { county: '桃園市', district: '桃園區', name: '市立武陵高級中學操場 🏫', address: '桃園市桃園區中山路889號', cap: '3,500人', type: 'shelter', lat: 24.9860, lng: 121.2870, source: '內政部消防署「全國避難收容處所位置圖資」(Dataset #73242)' },
+        { county: '桃園市', district: '中壢區', name: '中壢火車站地下防空處所 🚉', address: '桃園市中壢區中正路1號B1', cap: '5,000人', type: 'air_raid', lat: 24.9535, lng: 121.2255, source: '內政部消防署「全國避難收容處所位置圖資」(Dataset #73242)' },
 
         // 臺中市
-        { county: '臺中市', district: '北區', name: '臺中一中避難收容處所 🏫', address: '臺中市北區育才街2號', cap: '3,000人', type: 'shelter', lat: 24.1495, lng: 120.6860, source: '內政部消防署避難收容處所開放資料' },
-        { county: '臺中市', district: '中區', name: '臺中火車站地下層防空處所 🚉', address: '臺中市中區臺灣大道一段1號B1', cap: '6,000人', type: 'air_raid', lat: 24.1368, lng: 120.6850, source: '內政部消防署避難收容處所開放資料' },
-        { county: '臺中市', district: '南屯區', name: '文心森林公園開闊避難點 🌳', address: '臺中市南屯區文心路一段289號', cap: '8,000人', type: 'shelter', lat: 24.1425, lng: 120.6430, source: '內政部消防署避難收容處所開放資料' },
+        { county: '臺中市', district: '北區', name: '臺中一中避難收容處所 🏫', address: '臺中市北區育才街2號', cap: '3,000人', type: 'shelter', lat: 24.1495, lng: 120.6860, source: '內政部消防署「全國避難收容處所位置圖資」(Dataset #73242)' },
+        { county: '臺中市', district: '中區', name: '臺中火車站地下層防空處所 🚉', address: '臺中市中區臺灣大道一段1號B1', cap: '6,000人', type: 'air_raid', lat: 24.1368, lng: 120.6850, source: '內政部消防署「全國避難收容處所位置圖資」(Dataset #73242)' },
+        { county: '臺中市', district: '南屯區', name: '文心森林公園開闊避難點 🌳', address: '臺中市南屯區文心路一段289號', cap: '8,000人', type: 'shelter', lat: 24.1425, lng: 120.6430, source: '內政部消防署「全國避難收容處所位置圖資」(Dataset #73242)' },
 
         // 臺南市
-        { county: '臺南市', district: '東區', name: '國立臺南第一高級中學操場 🏫', address: '臺南市東區民族路一段1號', cap: '3,200人', type: 'shelter', lat: 22.9945, lng: 120.2160, source: '內政部消防署避難收容處所開放資料' },
-        { county: '臺南市', district: '中西區', name: '水萍塭公園避難開闊點 🌳', address: '臺南市中西區夏林路4號', cap: '7,000人', type: 'shelter', lat: 22.9865, lng: 120.1945, source: '內政部消防署避難收容處所開放資料' },
+        { county: '臺南市', district: '東區', name: '國立臺南第一高級中學操場 🏫', address: '臺南市東區民族路一段1號', cap: '3,200人', type: 'shelter', lat: 22.9945, lng: 120.2160, source: '內政部消防署「全國避難收容處所位置圖資」(Dataset #73242)' },
+        { county: '臺南市', district: '中西區', name: '水萍塭公園避難開闊點 🌳', address: '臺南市中西區夏林路4號', cap: '7,000人', type: 'shelter', lat: 22.9865, lng: 120.1945, source: '內政部消防署「全國避難收容處所位置圖資」(Dataset #73242)' },
 
         // 高雄市
-        { county: '高雄市', district: '三民區', name: '高雄高級中學避難處所 🏫', address: '高雄市三民區建國三路50號', cap: '2,800人', type: 'shelter', lat: 22.6375, lng: 120.3005, source: '內政部消防署避難收容處所開放資料' },
-        { county: '高雄市', district: '新興區', name: '美麗島車站地下防空處所 🚇', address: '高雄市新興區中山一路115號B1', cap: '5,000人', type: 'air_raid', lat: 22.6314, lng: 120.3018, source: '內政部消防署避難收容處所開放資料' },
-        { county: '高雄市', district: '鳳山區', name: '衛武營都會公園會合點 🌳', address: '高雄市鳳山區莿桐里', cap: '15,000人', type: 'shelter', lat: 22.6235, lng: 120.3420, source: '內政部消防署避難收容處所開放資料' },
+        { county: '高雄市', district: '三民區', name: '高雄高級中學避難處所 🏫', address: '高雄市三民區建國三路50號', cap: '2,800人', type: 'shelter', lat: 22.6375, lng: 120.3005, source: '內政部消防署「全國避難收容處所位置圖資」(Dataset #73242)' },
+        { county: '高雄市', district: '新興區', name: '美麗島車站地下防空處所 🚇', address: '高雄市新興區中山一路115號B1', cap: '5,000人', type: 'air_raid', lat: 22.6314, lng: 120.3018, source: '內政部消防署「全國避難收容處所位置圖資」(Dataset #73242)' },
+        { county: '高雄市', district: '鳳山區', name: '衛武營都會公園會合點 🌳', address: '高雄市鳳山區莿桐里', cap: '15,000人', type: 'shelter', lat: 22.6235, lng: 120.3420, source: '內政部消防署「全國避難收容處所位置圖資」(Dataset #73242)' },
 
         // 其他縣市
-        { county: '其他縣市', district: '宜蘭縣羅東鎮', name: '市立羅東國民小學操場 🏫', address: '宜蘭縣羅東鎮民族路45號', cap: '2,000人', type: 'shelter', lat: 24.6750, lng: 121.7680, source: '內政部消防署避難收容處所開放資料' },
-        { county: '其他縣市', district: '花蓮縣花蓮市', name: '國立花蓮高級中學操場 🏫', address: '花蓮縣花蓮市民權路126號', cap: '2,500人', type: 'shelter', lat: 23.9780, lng: 121.6180, source: '內政部消防署避難收容處所開放資料' }
+        { county: '其他縣市', district: '宜蘭縣羅東鎮', name: '市立羅東國民小學操場 🏫', address: '宜蘭縣羅東鎮民族路45號', cap: '2,000人', type: 'shelter', lat: 24.6750, lng: 121.7680, source: '內政部消防署「全國避難收容處所位置圖資」(Dataset #73242)' },
+        { county: '其他縣市', district: '花蓮縣花蓮市', name: '國立花蓮高級中學操場 🏫', address: '花蓮縣花蓮市民權路126號', cap: '2,500人', type: 'shelter', lat: 23.9780, lng: 121.6180, source: '內政部消防署「全國避難收容處所位置圖資」(Dataset #73242)' }
       ];
 
       // 判斷是否為寵物成員
@@ -296,7 +296,7 @@
           return sum + (item ? item.weightKg : 0);
         }, 0);
 
-        // 動態介接「內政部消防署避難收容處所開放資料」地標 (Item 3 要求)
+        // 動態介接「內政部消防署『全國避難收容處所位置圖資』(Dataset #73242)」
         const filteredShelters = ALL_TAIWAN_SHELTERS.filter(loc => {
           return selectedCounty === '其他縣市' ? true : loc.county === selectedCounty;
         });
@@ -325,7 +325,7 @@
               window.gisMapInstance = L.map('interactive-shelter-map').setView(center, 12);
               L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19,
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> ｜ 內政部消防署避難收容處所開放資料'
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> ｜ 內政部消防署「全國避難收容處所位置圖資」'
               }).addTo(window.gisMapInstance);
 
               window.gisMarkerGroup = L.layerGroup().addTo(window.gisMapInstance);
@@ -919,7 +919,7 @@
                 </div>
               )}
 
-              {/* PAGE 5: MAP & APPS (Item 1 刪除舊 Portal 按鈕、Item 2 門戶網址為 https://bear.emic.gov.tw/MY2/、Item 3 介接內政部消防署避難收容處所開放資料) */}
+              {/* PAGE 5: MAP & APPS (使用內政部消防署「全國避難收容處所位置圖資」https://data.gov.tw/dataset/73242) */}
               {currentStep === 5 && (
                 <div className="space-y-6">
                   <div className="space-y-1">
@@ -927,7 +927,7 @@
                       <span>📍</span>
                       <span>找到適合的避難地點與官方查詢管道</span>
                     </h2>
-                    <p className="text-xs text-stone-600 font-normal">您可透過全民防災 e 點通 App 查詢，或使用下方連線「內政部消防署避難收容處所開放資料」的互動式地圖定位避難場所：</p>
+                    <p className="text-xs text-stone-600 font-normal">您可透過全民防災 e 點通 App 查詢，或使用下方連線政府開放資料平臺《全國避難收容處所位置圖資》的互動式地圖定位避難場所：</p>
                   </div>
 
                   <div className="bg-rose-50 p-4 rounded-xl border border-rose-300 text-xs text-rose-950 leading-relaxed space-y-1.5">
@@ -943,7 +943,7 @@
                     </div>
                   </div>
 
-                  {/* Item 1 & Item 2：更換門戶按鈕網址為 https://bear.emic.gov.tw/MY2/ */}
+                  {/* 門戶按址導向卡 */}
                   <div className="bg-white p-5 rounded-2xl border border-amber-300 space-y-3 text-xs">
                     <div className="font-bold text-stone-900 text-sm border-b pb-2 flex items-center gap-1.5">
                       <span>🔍</span>
@@ -968,7 +968,7 @@
                     </div>
                   </div>
 
-                  {/* Item 3 要求：避難處所位置介接「內政部消防署避難收容處所開放資料」 */}
+                  {/* 指定介接 https://data.gov.tw/dataset/73242 點位圖資 */}
                   <div className="bubble-card p-5 space-y-4">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-3 text-xs">
                       <div>
@@ -978,7 +978,7 @@
                         </div>
                         <div className="text-emerald-700 font-bold text-[11px] pt-0.5 flex items-center gap-1">
                           <span>🟢</span>
-                          <span>已介接：內政部消防署避難收容處所開放資料 (Open Data)</span>
+                          <span>已介接：內政部消防署「全國避難收容處所位置圖資」(data.gov.tw/dataset/73242)</span>
                         </div>
                       </div>
 
@@ -1008,9 +1008,19 @@
 
                     <div id="interactive-shelter-map" className="w-full h-80 rounded-2xl border border-amber-300 z-10 overflow-hidden shadow-inner"></div>
 
-                    <div className="flex items-center justify-between text-[11px] text-stone-500 font-normal pt-1">
-                      <span>🟢 綠色/藍色地標：地震/風災收容處所</span>
-                      <span>橙色/紅色地標：防空避難處所</span>
+                    <div className="flex items-center justify-between flex-wrap gap-2 text-[11px] text-stone-600 font-normal pt-1 bg-amber-50/60 p-2.5 rounded-xl border border-amber-200">
+                      <div>
+                        <span>🟢 綠/藍地標：地震/風災避難收容處所</span>
+                        <span className="ml-3">橙/紅地標：防空避難處所</span>
+                      </div>
+                      <a
+                        href="https://data.gov.tw/dataset/73242"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-orange-700 font-bold hover:underline inline-flex items-center gap-1"
+                      >
+                        <span>📥 檢視 Government Open Data 原始點位檔 (#73242) ↗</span>
+                      </a>
                     </div>
                   </div>
                 </div>
