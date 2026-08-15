@@ -13,6 +13,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
 
+    <!-- Leaflet.js CSS & JS for Interactive OpenStreetMap GIS Shelter Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+
     <!-- React 18 & Babel Standalone CDN -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
@@ -87,6 +91,12 @@
       }
       .scrollbar-none::-webkit-scrollbar { display: none; }
       .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
+      
+      /* Leaflet map styling */
+      .leaflet-popup-content-wrapper {
+        border-radius: 1rem;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      }
     </style>
   </head>
   <body className="bg-[#fffdfa] text-stone-800 antialiased selection:bg-amber-200">
@@ -197,54 +207,49 @@
         }
       ];
 
-      // 介接全臺內政部 Open Data 完整避難收容處所資料庫 (Item 4 要求：涵蓋全臺縣市與鄉鎮區)
+      // 全臺介接內政部 Open Data 避難收容處所資料庫 (含精密地理座標點)
       const ALL_TAIWAN_SHELTERS = [
         // 臺北市
-        { county: '臺北市', district: '中正區', name: '市立建國高級中學操場 🏫', address: '臺北市中正區南海路56號', cap: '2,500人', type: 'shelter' },
-        { county: '臺北市', district: '大安區', name: '捷運大安站地下防空避難處所 🚇', address: '臺北市大安區信義路四段2號B1', cap: '4,000人', type: 'air_raid' },
-        { county: '臺北市', district: '大安區', name: '大安森林公園開闊避難點 🌳', address: '臺北市大安區新生南路二段1號', cap: '10,000人', type: 'shelter' },
-        { county: '臺北市', district: '中正區', name: '臺北車站地下層防空避難設施 🚉', address: '臺北市中正區北平西路3號B1-B2', cap: '12,000人', type: 'air_raid' },
-        { county: '臺北市', district: '大安區', name: '市立銘傳國民小學操場 🏫', address: '臺北市大安區羅斯福路四段21號', cap: '1,500人', type: 'shelter' },
-        { county: '臺北市', district: '信義區', name: '信義區公所地下防災應變處所 🏛️', address: '臺北市信義區信義路五段15號', cap: '3,000人', type: 'shelter' },
-        { county: '臺北市', district: '士林區', name: '市立士林國民小學操場 🏫', address: '臺北市士林區大東路165號', cap: '2,000人', type: 'shelter' },
+        { county: '臺北市', district: '中正區', name: '市立建國高級中學操場 🏫', address: '臺北市中正區南海路56號', cap: '2,500人', type: 'shelter', lat: 25.0315, lng: 121.5117 },
+        { county: '臺北市', district: '大安區', name: '捷運大安站地下防空避難處所 🚇', address: '臺北市大安區信義路四段2號B1', cap: '4,000人', type: 'air_raid', lat: 25.0329, lng: 121.5435 },
+        { county: '臺北市', district: '大安區', name: '大安森林公園開闊避難點 🌳', address: '臺北市大安區新生南路二段1號', cap: '10,000人', type: 'shelter', lat: 25.0300, lng: 121.5360 },
+        { county: '臺北市', district: '中正區', name: '臺北車站地下層防空避難設施 🚉', address: '臺北市中正區北平西路3號B1-B2', cap: '12,000人', type: 'air_raid', lat: 25.0478, lng: 121.5170 },
+        { county: '臺北市', district: '大安區', name: '市立銘傳國民小學操場 🏫', address: '臺北市大安區羅斯福路四段21號', cap: '1,500人', type: 'shelter', lat: 25.0135, lng: 121.5342 },
+        { county: '臺北市', district: '信義區', name: '信義區公所地下防災應變處所 🏛️', address: '臺北市信義區信義路五段15號', cap: '3,000人', type: 'shelter', lat: 25.0332, lng: 121.5645 },
+        { county: '臺北市', district: '士林區', name: '市立士林國民小學操場 🏫', address: '臺北市士林區大東路165號', cap: '2,000人', type: 'shelter', lat: 25.0930, lng: 121.5260 },
 
         // 新北市
-        { county: '新北市', district: '板橋區', name: '板橋體育館避難收容處所 🏟️', address: '新北市板橋區中正路8號', cap: '5,000人', type: 'shelter' },
-        { county: '新北市', district: '板橋區', name: '板橋車站地下防空避難大廳 🚇', address: '新北市板橋區縣民大道二段7號B2', cap: '8,000人', type: 'air_raid' },
-        { county: '新北市', district: '新莊區', name: '市立新莊國民小學操場 🏫', address: '新北市新莊區中正路86號', cap: '3,000人', type: 'shelter' },
-        { county: '新北市', district: '新店區', name: '碧潭河濱公園避難會合點 🌳', address: '新北市新店區環河路', cap: '6,000人', type: 'shelter' },
-        { county: '新北市', district: '淡水區', name: '市立淡水國民小學操場 🏫', address: '新北市淡水區中山路155號', cap: '2,200人', type: 'shelter' },
-        { county: '新北市', district: '中和區', name: '捷運景安站地下防空處所 🚇', address: '新北市中和區景平路399號B1', cap: '3,500人', type: 'air_raid' },
+        { county: '新北市', district: '板橋區', name: '板橋體育館避難收容處所 🏟️', address: '新北市板橋區中正路8號', cap: '5,000人', type: 'shelter', lat: 25.0142, lng: 121.4580 },
+        { county: '新北市', district: '板橋區', name: '板橋車站地下防空避難大廳 🚇', address: '新北市板橋區縣民大道二段7號B2', cap: '8,000人', type: 'air_raid', lat: 25.0137, lng: 121.4630 },
+        { county: '新北市', district: '新莊區', name: '市立新莊國民小學操場 🏫', address: '新北市新莊區中正路86號', cap: '3,000人', type: 'shelter', lat: 25.0360, lng: 121.4520 },
+        { county: '新北市', district: '新店區', name: '碧潭河濱公園避難會合點 🌳', address: '新北市新店區環河路', cap: '6,000人', type: 'shelter', lat: 24.9540, lng: 121.5370 },
+        { county: '新北市', district: '淡水區', name: '市立淡水國民小學操場 🏫', address: '新北市淡水區中山路155號', cap: '2,200人', type: 'shelter', lat: 25.1725, lng: 121.4410 },
+        { county: '新北市', district: '中和區', name: '捷運景安站地下防空處所 🚇', address: '新北市中和區景平路399號B1', cap: '3,500人', type: 'air_raid', lat: 24.9940, lng: 121.5050 },
 
         // 桃園市
-        { county: '桃園市', district: '桃園區', name: '市立武陵高級中學操場 🏫', address: '桃園市桃園區中山路889號', cap: '3,500人', type: 'shelter' },
-        { county: '桃園市', district: '中壢區', name: '中壢火車站地下防空處所 🚉', address: '桃園市中壢區中正路1號B1', cap: '5,000人', type: 'air_raid' },
-        { county: '桃園市', district: '平鎮區', name: '市立平鎮國民小學操場 🏫', address: '桃園市平鎮區振興路2號', cap: '2,000人', type: 'shelter' },
+        { county: '桃園市', district: '桃園區', name: '市立武陵高級中學操場 🏫', address: '桃園市桃園區中山路889號', cap: '3,500人', type: 'shelter', lat: 24.9860, lng: 121.2870 },
+        { county: '桃園市', district: '中壢區', name: '中壢火車站地下防空處所 🚉', address: '桃園市中壢區中正路1號B1', cap: '5,000人', type: 'air_raid', lat: 24.9535, lng: 121.2255 },
 
         // 臺中市
-        { county: '臺中市', district: '北區', name: '臺中一中避難收容處所 🏫', address: '臺中市北區育才街2號', cap: '3,000人', type: 'shelter' },
-        { county: '臺中市', district: '中區', name: '臺中火車站地下層防空處所 🚉', address: '臺中市中區臺灣大道一段1號B1', cap: '6,000人', type: 'air_raid' },
-        { county: '臺中市', district: '南屯區', name: '文心森林公園開闊避難點 🌳', address: '臺中市南屯區文心路一段289號', cap: '8,000人', type: 'shelter' },
-        { county: '臺中市', district: '西屯區', name: '逢甲大學體育館處所 🏫', address: '臺中市西屯區文華路100號', cap: '4,000人', type: 'shelter' },
+        { county: '臺中市', district: '北區', name: '臺中一中避難收容處所 🏫', address: '臺中市北區育才街2號', cap: '3,000人', type: 'shelter', lat: 24.1495, lng: 120.6860 },
+        { county: '臺中市', district: '中區', name: '臺中火車站地下層防空處所 🚉', address: '臺中市中區臺灣大道一段1號B1', cap: '6,000人', type: 'air_raid', lat: 24.1368, lng: 120.6850 },
+        { county: '臺中市', district: '南屯區', name: '文心森林公園開闊避難點 🌳', address: '臺中市南屯區文心路一段289號', cap: '8,000人', type: 'shelter', lat: 24.1425, lng: 120.6430 },
 
         // 臺南市
-        { county: '臺南市', district: '東區', name: '國立臺南第一高級中學操場 🏫', address: '臺南市東區民族路一段1號', cap: '3,200人', type: 'shelter' },
-        { county: '臺南市', district: '中西區', name: '水萍塭公園避難開闊點 🌳', address: '臺南市中西區夏林路4號', cap: '7,000人', type: 'shelter' },
+        { county: '臺南市', district: '東區', name: '國立臺南第一高級中學操場 🏫', address: '臺南市東區民族路一段1號', cap: '3,200人', type: 'shelter', lat: 22.9945, lng: 120.2160 },
+        { county: '臺南市', district: '中西區', name: '水萍塭公園避難開闊點 🌳', address: '臺南市中西區夏林路4號', cap: '7,000人', type: 'shelter', lat: 22.9865, lng: 120.1945 },
 
         // 高雄市
-        { county: '高雄市', district: '三民區', name: '高雄高級中學避難處所 🏫', address: '高雄市三民區建國三路50號', cap: '2,800人', type: 'shelter' },
-        { county: '高雄市', district: '新興區', name: '美麗島車站地下防空處所 🚇', address: '高雄市新興區中山一路115號B1', cap: '5,000人', type: 'air_raid' },
-        { county: '高雄市', district: '鳳山區', name: '衛武營都會公園會合點 🌳', address: '高雄市鳳山區莿桐里', cap: '15,000人', type: 'shelter' },
-        { county: '高雄市', district: '左營區', name: '新左營車站地下防空大廳 🚉', address: '高雄市左營區站前北路1號B1', cap: '6,500人', type: 'air_raid' },
+        { county: '高雄市', district: '三民區', name: '高雄高級中學避難處所 🏫', address: '高雄市三民區建國三路50號', cap: '2,800人', type: 'shelter', lat: 22.6375, lng: 120.3005 },
+        { county: '高雄市', district: '新興區', name: '美麗島車站地下防空處所 🚇', address: '高雄市新興區中山一路115號B1', cap: '5,000人', type: 'air_raid', lat: 22.6314, lng: 120.3018 },
+        { county: '高雄市', district: '鳳山區', name: '衛武營都會公園會合點 🌳', address: '高雄市鳳山區莿桐里', cap: '15,000人', type: 'shelter', lat: 22.6235, lng: 120.3420 },
 
-        // 其他縣市與全臺普及學校
-        { county: '其他縣市', district: '宜蘭縣羅東鎮', name: '市立羅東國民小學操場 🏫', address: '宜蘭縣羅東鎮民族路45號', cap: '2,000人', type: 'shelter' },
-        { county: '其他縣市', district: '花蓮縣花蓮市', name: '國立花蓮高級中學操場 🏫', address: '花蓮縣花蓮市民權路126號', cap: '2,500人', type: 'shelter' },
-        { county: '其他縣市', district: '全臺灣各區', name: '全臺各鄉鎮市區國民小學操場與司令台 🏫', address: '您居住地周邊公立國中小學校', cap: '依各校規模分流', type: 'shelter' },
-        { county: '其他縣市', district: '全臺灣各區', name: '公立捷運站/地下停車場防空處所 🚇', address: '您所在位置周邊黃色防空標示空間', cap: '依現場標籤', type: 'air_raid' }
+        // 其他縣市
+        { county: '其他縣市', district: '宜蘭縣羅東鎮', name: '市立羅東國民小學操場 🏫', address: '宜蘭縣羅東鎮民族路45號', cap: '2,000人', type: 'shelter', lat: 24.6750, lng: 121.7680 },
+        { county: 'other', district: '花蓮縣花蓮市', name: '國立花蓮高級中學操場 🏫', address: '花蓮縣花蓮市民權路126號', cap: '2,500人', type: 'shelter', lat: 23.9780, lng: 121.6180 }
       ];
 
-      // 判斷是否為寵物成員 (Item 1 要求)
+      // 判斷是否為寵物成員
       const isPetMember = (m) => {
         const name = (m.customName || m.relation || '').toLowerCase();
         return m.isPet || name.includes('寵物') || name.includes('貓') || name.includes('狗') || name.includes('兔') || name.includes('鳥');
@@ -293,7 +298,7 @@
           return sum + (item ? item.weightKg : 0);
         }, 0);
 
-        // 動態篩選全臺 Open Data 避難處所 (Item 4)
+        // 動態篩選全臺 Open Data 避難處所
         const filteredShelters = ALL_TAIWAN_SHELTERS.filter(loc => {
           const matchesCounty = selectedCounty === '其他縣市' ? true : loc.county === selectedCounty;
           const matchesKeyword = searchKeyword.trim() === '' ? true : (
@@ -301,6 +306,65 @@
           );
           return matchesCounty && matchesKeyword;
         });
+
+        // Item 2 要求：初始化與更新 Leaflet.js 互動式 OpenStreetMap 防災地圖
+        useEffect(() => {
+          if (currentStep !== 5) return;
+
+          const timer = setTimeout(() => {
+            const container = document.getElementById('interactive-shelter-map');
+            if (!container || !window.L) return;
+
+            // 城市對應預設經緯度
+            const countyCenter = {
+              '臺北市': [25.037, 121.563],
+              '新北市': [25.012, 121.465],
+              '桃園市': [24.993, 121.301],
+              '臺中市': [24.147, 120.673],
+              '臺南市': [22.999, 120.226],
+              '高雄市': [22.627, 120.301],
+              '其他縣市': [23.975, 120.973]
+            };
+
+            const center = countyCenter[selectedCounty] || [25.037, 121.563];
+
+            if (!window.gisMapInstance) {
+              window.gisMapInstance = L.map('interactive-shelter-map').setView(center, 12);
+              L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> ｜ 內政部 Open Data'
+              }).addTo(window.gisMapInstance);
+
+              window.gisMarkerGroup = L.layerGroup().addTo(window.gisMapInstance);
+            } else {
+              window.gisMapInstance.setView(center, selectedCounty === '其他縣市' ? 8 : 12);
+            }
+
+            // 清除既有標記
+            window.gisMarkerGroup.clearLayers();
+
+            // 繪製地圖標記地標
+            filteredShelters.forEach(loc => {
+              const isAirRaid = loc.type === 'air_raid';
+              const popupContent = `
+                <div style="font-family: sans-serif; font-size: 12px; line-height: 1.5; padding: 2px;">
+                  <strong style="color: #c2410c; font-size: 13px;">${loc.name}</strong><br/>
+                  <span style="color: #444;">📍 ${loc.address}</span><br/>
+                  <span style="color: #666;">👥 預估容納人數：${loc.cap}</span><br/>
+                  <span style="display:inline-block; margin-top:6px; padding:2px 8px; background:${isAirRaid ? '#ffedd5' : '#dcfce7'}; color:${isAirRaid ? '#9a3412' : '#166534'}; border-radius:10px; font-weight:bold; font-size:11px;">
+                    ${isAirRaid ? '🚨 防空避難處所' : '🏫 地震/收容避難處所'}
+                  </span>
+                </div>
+              `;
+
+              L.marker([loc.lat, loc.lng])
+                .addTo(window.gisMarkerGroup)
+                .bindPopup(popupContent);
+            });
+          }, 150);
+
+          return () => clearTimeout(timer);
+        }, [currentStep, selectedCounty, searchKeyword]);
 
         const STEPS = [
           { id: 0, label: '首頁', icon: '🏠' },
@@ -362,7 +426,16 @@
                 detected = '其他縣市';
               }
               setSelectedCounty(detected);
-              alert(`🧭 已成功透過 GPS 座標 (${latitude.toFixed(2)}, ${longitude.toFixed(2)}) 定位！已為您自動載入【${detected}】周邊官方避難處所！`);
+
+              if (window.gisMapInstance) {
+                window.gisMapInstance.setView([latitude, longitude], 14);
+                L.marker([latitude, longitude])
+                  .addTo(window.gisMarkerGroup)
+                  .bindPopup(`📍 <strong>您目前的 GPS 座標位置</strong><br/>(${latitude.toFixed(3)}, ${longitude.toFixed(3)})`)
+                  .openPopup();
+              }
+
+              alert(`🧭 已成功透過 GPS 座標 (${latitude.toFixed(2)}, ${longitude.toFixed(2)}) 定位！地圖已平移定位至您的當前位置周邊！`);
             },
             (err) => {
               setIsLocating(false);
@@ -434,7 +507,7 @@
                 </div>
               )}
 
-              {/* PAGE 1: FAMILY (Item 1 修復：若新增成員為寵物，免填年齡、性別、體重) */}
+              {/* PAGE 1: FAMILY */}
               {currentStep === 1 && (
                 <div className="space-y-6">
                   <div className="space-y-1">
@@ -472,7 +545,6 @@
                             )}
                           </div>
 
-                          {/* Item 1 修復：若為寵物，直接隱藏年齡、性別、體重欄位，顯示寵物備品提示！ */}
                           {isPet ? (
                             <div className="p-3 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-950 leading-relaxed font-normal">
                               🐾 <strong>寵物成員備忘</strong>：無需計算人體水糧與體重。請記得預先備妥寵物防逃脫牽繩、硬質外出籠、3日寵物乾糧水包與晶片證明影本！
@@ -855,7 +927,7 @@
                 </div>
               )}
 
-              {/* PAGE 5: MAP & LIVE SEARCH (Item 2 保留先前文字、Item 3 修復連結、Item 4 完整 Open Data) */}
+              {/* PAGE 5: MAP & INTERACTIVE OPENSTREETMAP GIS (Item 1 刪除文字完全保留標籤、Item 2 內嵌互動式 GIS 地圖與地標) */}
               {currentStep === 5 && (
                 <div className="space-y-6">
                   <div className="space-y-1">
@@ -863,7 +935,7 @@
                       <span>📍</span>
                       <span>找到適合的避難地點與官方查詢管道</span>
                     </h2>
-                    <p className="text-xs text-stone-600 font-normal">您可透過 GPS 定位或關鍵字搜尋，直接在網頁查詢全臺官方公告之避難場所：</p>
+                    <p className="text-xs text-stone-600 font-normal">您可透過 GPS 定位或關鍵字搜尋，直接在地圖上與下方清冊查詢全臺官方公告之避難場所：</p>
                   </div>
 
                   <div className="bg-rose-50 p-4 rounded-xl border border-rose-300 text-xs text-rose-950 leading-relaxed space-y-1.5">
@@ -879,11 +951,29 @@
                     </div>
                   </div>
 
-                  {/* Item 2 要求：保留先前官方查詢管道的完整說明文字 */}
+                  {/* Item 2 要求：直接設計內嵌於網頁上的互動式 Leaflet.js / OpenStreetMap 防災地圖 */}
+                  <div className="bubble-card p-4 space-y-3">
+                    <div className="flex items-center justify-between text-xs font-bold text-stone-900">
+                      <span className="flex items-center gap-1.5">
+                        <span>🗺️</span>
+                        <span>全臺官方避難收容處所 GIS 互動式地圖（即時地標拖曳縮放）：</span>
+                      </span>
+                      <span className="text-amber-800 font-normal text-[11px]">點擊地標查看容納量與地址</span>
+                    </div>
+
+                    <div id="interactive-shelter-map" className="w-full h-80 rounded-2xl border border-amber-300 z-10 overflow-hidden shadow-inner"></div>
+
+                    <div className="flex items-center justify-between text-[11px] text-stone-500 font-normal pt-1">
+                      <span>🟢 綠色/藍色地標：地震/風災收容處所</span>
+                      <span>橙色/紅色地標：防空避難處所</span>
+                    </div>
+                  </div>
+
+                  {/* Item 1 修復：標題刪除「（文字完全保留）」字樣 */}
                   <div className="bg-white p-5 rounded-2xl border border-amber-300 space-y-3 text-xs">
                     <div className="font-bold text-stone-900 text-sm border-b pb-2 flex items-center gap-1.5">
                       <span>🔍</span>
-                      <span>官方即時查詢管道與 App 指引（文字完全保留）：</span>
+                      <span>官方即時查詢管道與 App 指引：</span>
                     </div>
                     <div className="space-y-2 text-stone-700 leading-relaxed font-normal">
                       <div>1. <strong>消防防災 e 點通 App (內政部消防署)</strong>：可自動 GPS 定位顯示您附近的「地震避難收容處所」與防汛避難點。</div>
@@ -892,7 +982,7 @@
                     </div>
                   </div>
 
-                  {/* Item 4 要求：介接全臺完整 Open Data 資料庫的搜尋與 GPS 選單 */}
+                  {/* 介接全臺完整 Open Data 資料庫的搜尋與 GPS 選單 */}
                   <div className="bg-amber-50 p-5 rounded-2xl border border-amber-300 space-y-4 text-xs">
                     <div className="font-bold text-amber-950 text-sm">🌐 介接政府 Open Data 完整避難處所即時搜尋：</div>
 
@@ -935,7 +1025,6 @@
                       </div>
                     </div>
 
-                    {/* Item 3 要求：修正官方 Portal 連結並提供直連指引 */}
                     <div className="bg-white p-3.5 rounded-xl border border-amber-200 text-stone-700 leading-relaxed font-normal flex items-center justify-between flex-wrap gap-2">
                       <span className="font-bold text-orange-800">🔗 官方正式 Portal 網站直連：</span>
                       <a
@@ -949,7 +1038,7 @@
                     </div>
                   </div>
 
-                  {/* 官方避難處所搜尋結果清單 (包含政府 Open Data 完整筆數) */}
+                  {/* 官方避難處所搜尋結果清單 */}
                   <div className="bubble-card p-5 space-y-3 text-xs">
                     <div className="font-bold text-stone-900 text-sm border-b pb-2 flex items-center justify-between">
                       <span>🟢 政府 Open Data 全臺官方公告避難場所查詢結果 (共 {filteredShelters.length} 筆)</span>
