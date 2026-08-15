@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛡️</text></svg>" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <title>🛡️ 我的家庭安全避難計畫 | 避難包迷思挑戰</title>
+    <meta name="description" content="引導學生與家人一起閱讀《臺灣全民安全指引》（小橘書），透過避難包迷思挑戰學習在有限資源下做安全決策。" />
+    
+    <!-- Google Fonts: Crisp Noto Sans TC -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- React 18 & Babel Standalone CDN -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              amber: {
+                50: '#fffbeb',
+                100: '#fef3c7',
+                200: '#fde68a',
+                300: '#fcd34d',
+                400: '#fbbf24',
+                500: '#f59e0b',
+                600: '#d97706',
+                700: '#b45309',
+                800: '#92400e',
+                900: '#78350f',
+              },
+              peach: {
+                50: '#fff7ed',
+                100: '#ffedd5',
+                200: '#fed7aa',
+                300: '#fdba74',
+                400: '#fb923c',
+                500: '#f97316',
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body {
+        font-family: "Noto Sans TC", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        font-weight: 400;
+        background-color: #fffdfa;
+        color: #292524;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      .bubble-card {
+        background: white;
+        border-radius: 1.25rem;
+        border: 1.5px solid #fed7aa;
+        box-shadow: 0 4px 12px -2px rgba(251, 146, 60, 0.05);
+        transition: all 0.2s ease-in-out;
+      }
+      .bubble-card:hover {
+        box-shadow: 0 6px 16px -2px rgba(251, 146, 60, 0.1);
+        border-color: #fb923c;
+      }
+      .cute-btn {
+        border-radius: 9999px;
+        transition: all 0.15s ease;
+      }
+      .cute-btn:hover {
+        transform: translateY(-1px);
+      }
+      .cute-btn:active {
+        transform: scale(0.98);
+      }
+      @media print {
+        header, footer, nav, button, .print-hidden { display: none !important; }
+        body { background: white !important; color: black !important; }
+        .print-card { border: 1px solid #ccc !important; box-shadow: none !important; }
+      }
+      .scrollbar-none::-webkit-scrollbar { display: none; }
+      .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+  </head>
+  <body className="bg-[#fffdfa] text-stone-800 antialiased selection:bg-amber-200">
+    <div id="root"></div>
+
+    <script type="text/babel">
+      const { useState, useEffect } = React;
+
+      // 1. DATA & CONSTANTS
+      const OFFICIAL_BOOK_INFO = {
+        title: '《臺灣全民安全指引》（俗稱「小橘書」）',
+        publisher: '中華民國國防部全民防衛動員署 / 內政部消防署',
+        officialUrl: 'https://aod.mnd.gov.tw/'
+      };
+
+      // 7 大迷思資料模型數據
+      const MYTH_STAGES_DATA = [
+        {
+          id: 1,
+          title: '迷思 1｜💧 水越多越安全？',
+          subtitle: '你準備離開家避難，你覺得：「水是最重要的，所以能帶多少就帶多少。」',
+          type: 'water_choice',
+          options: [
+            { id: 'w_a', label: '💧 600 ml × 2 瓶', weightKg: 1.2, note: '輕便機動性高' },
+            { id: 'w_b', label: '💧 600 ml × 4 瓶', weightKg: 2.4, note: '標準適中負擔' },
+            { id: 'w_c', label: '💧 600 ml × 8 瓶', weightKg: 4.8, note: '過重佔用空間' }
+          ],
+          consequencePrompt: '你選擇的水量已加入背包！你確定多帶的水不會壓垮你的移動速度嗎？',
+          officialText: '💧 水當然非常重要，但避難包不是「機能裝多少就裝多少」。多帶的每一公斤水，就代表少帶一公斤其他生存物資。官方規範：隨身避難包準備體重x15mlx3天水量，更大量飲水放在「居家儲備」。',
+          conceptText: '🎒 隨身避難包：適量機動飲水（維持3日生命） ｜ 🏠 居家儲備：大量儲水桶'
+        },
+        {
+          id: 2,
+          title: '迷思 2｜🍜 泡麵是防災必備嗎？',
+          subtitle: '看到家裡有一箱泡麵：「保存久又方便，當然要帶！」可是，吃泡麵還需要什麼？',
+          type: 'noodle_check',
+          noodleItems: [
+            { id: 'need_water', label: '💧 額外滾燙飲用水', weightKg: 0.6 },
+            { id: 'need_heat', label: '🔥 卡式瓦斯爐與燃料', weightKg: 1.5 },
+            { id: 'need_pot', label: '🍳 烹煮鍋具與碗筷', weightKg: 0.8 },
+            { id: 'need_time', label: '⏱️ 現場等待烹煮時間', weightKg: 0.0 }
+          ],
+          consequencePrompt: '你確定這是避難逃生時最值得攜帶的食物嗎？',
+          officialText: '🍜 泡麵不是完全不能吃，但「需要熱水與烹煮」會增加水源、燃料與器具的巨大負擔。緊急避難包應優先考慮「不需烹煮、即開即食、方便攜帶」的乾糧或能量棒！',
+          conceptText: '🎒 隨身避難包：即食飯、能量棒、餅乾 ｜ 🏠 居家儲備：泡麵與罐頭'
+        },
+        {
+          id: 3,
+          title: '迷思 3｜🥫 罐頭越多越好嗎？',
+          subtitle: '面對架上的食物，你會怎麼選擇裝進避難包？',
+          type: 'can_choice',
+          options: [
+            { id: 'can_a', label: '🥫 3 個大玻璃/金屬罐頭 (重量約 1.2 kg)', weightKg: 1.2, isHeavy: true },
+            { id: 'can_b', label: '🍙 即食飯 ＋ 能量乾糧 ＋ 餅乾 (重量約 0.8 kg)', weightKg: 0.8, isHeavy: false }
+          ],
+          consequencePrompt: '你選好了食物！耐保存是否等於適合大量背著走？',
+          officialText: '🥫 罐頭可以長效保存，但金屬與玻璃重量體積極大且容易割傷。避難包需優先考慮「重量、體積、是否需開罐器與加熱」！',
+          conceptText: '🎒 隨身避難包：少量軟包乾糧 ｜ 🏠 居家儲備：大量罐頭物資'
+        },
+        {
+          id: 4,
+          title: '迷思 4｜🛏️ 厚棉被才夠保暖嗎？',
+          subtitle: '冷天避難時，你會帶哪一個保暖？',
+          type: 'blanket_choice',
+          options: [
+            { id: 'blk_a', label: '🛏️ 居家大厚棉被 (重量約 2.5 kg，體積極大)', weightKg: 2.5, isHuge: true },
+            { id: 'blk_b', label: '🧥 輕便保暖衣物 ＋ 鋁箔保暖毯 (重量約 0.4 kg)', weightKg: 0.4, isHuge: false }
+          ],
+          consequencePrompt: '你現在需要的是「體溫保暖」，還是「把整條棉被搬走」？',
+          officialText: '🛏️ 厚棉被體積龐大會塞爆背包並增加 2.5kg 以上負擔。緊急避難包應優先考慮折疊後極小的鋁箔熱反射毯與輕保暖外套。',
+          conceptText: '💡 點擊「把厚棉被拿出來」，即可瞬間為背包減少 2.5 kg 負擔！'
+        },
+        {
+          id: 5,
+          title: '迷思 5｜🩹 急救箱越大越專業？',
+          subtitle: '如果是你，你會選哪一種醫藥箱隨身攜帶？',
+          type: 'medical_choice',
+          options: [
+            { id: 'med_a', label: '🩹 大型全功能家庭醫療箱 (重量約 3.0 kg)', weightKg: 3.0, isHuge: true },
+            { id: 'med_b', label: '🩹 基本外傷敷料 ＋ 個人常用處方藥 (重量約 0.5 kg)', weightKg: 0.5, isHuge: false }
+          ],
+          consequencePrompt: '避難包不是行動醫院！什麼才是最緊急迫切的？',
+          officialText: '🩹 避難包不是醫療箱，主要用途是處置撤離途中的擦傷出血與維持個人 7 天慢性病藥物。大型醫療箱應留在居家儲備。',
+          conceptText: '🎒 隨身避難包：OK繃、紗布、消毒水、個人處方藥 ｜ 🏠 居家儲備：大型全套醫療箱'
+        },
+        {
+          id: 6,
+          title: '迷思 6｜📄 重要文件一定要帶正本嗎？',
+          subtitle: '如果你只有 30 秒撤離，你會把全家所有權狀存摺正本都抱走嗎？',
+          type: 'doc_choice',
+          options: [
+            { id: 'doc_a', label: '📕 房屋權狀 ＋ 存摺正本 ＋ 保險契約正本 (貴重全拿)', weightKg: 1.5 },
+            { id: 'doc_b', label: '📄 身分證影本 ＋ 數位隨身碟備份 ＋ 必要證件 (輕便保護)', weightKg: 0.2 }
+          ],
+          consequencePrompt: '重要不代表「全部正本都要塞進避難包」！',
+          officialText: '📄 文件正本受潮遺失風險高。預先準備「防水夾影本」與「加密數位隨身碟/雲端備份」，既輕便又能隨時向救難人員確認身分與申請補助。',
+          conceptText: '🎒 隨身避難包：防水影本與數位隨身碟 ｜ 🏠 安全保險箱：正本文件'
+        },
+        {
+          id: 7,
+          title: '迷思 7｜🎒 我的包越完整越安全？ (28.6 kg 超重拯救挑戰)',
+          subtitle: '如果把所有你覺得重要的東西全部塞進避難包...',
+          type: 'heavy_challenge',
+          heavyItemsList: [
+            { id: 'h_water', name: '💧 5L 巨大桶裝水', weightKg: 5.0 },
+            { id: 'h_noodle', name: '🍜 兩大箱泡麵', weightKg: 2.0 },
+            { id: 'h_cans', name: '🥫 6 個大鐵罐頭', weightKg: 2.4 },
+            { id: 'h_blanket', name: '🛏️ 厚雙人棉被', weightKg: 2.5 },
+            { id: 'h_laptop', name: '💻 筆記型電腦與變壓器', weightKg: 2.2 },
+            { id: 'h_camera', name: '📷 單眼相機與鏡頭', weightKg: 1.8 },
+            { id: 'h_medical', name: '🩹 大型家庭急救箱', weightKg: 3.0 },
+            { id: 'h_clothes', name: '👕 5 套換洗冬衣', weightKg: 3.2 },
+            { id: 'h_books', name: '📚 4 本硬皮精裝書', weightKg: 2.5 },
+            { id: 'h_others', name: '🧸 其他雜物與厚重飾品', weightKg: 4.0 }
+          ],
+          officialText: '⚠️ 總重高達 28.6 kg！逃生時根本舉步維艱！防災不是把家搬走，而是只帶最不可或缺的生存物資。'
+        }
+      ];
+
+      // 自由分類物資清單 (Item Classifier)
+      const CLASSIFIER_ITEMS = [
+        { id: 'c1', name: '🔥 卡式瓦斯爐罐', rec: 'home', tag: '🏠 居家儲備' },
+        { id: 'c2', name: '🪖 安全帽', rec: 'go_bag', tag: '🎒 隨身避難包' },
+        { id: 'c3', name: '💧 個人3日份水', rec: 'go_bag', tag: '🎒 隨身避難包' },
+        { id: 'c4', name: '🍜 乾泡麵', rec: 'home', tag: '🏠 居家儲備' },
+        { id: 'c5', name: '💊 個人處方藥', rec: 'go_bag', tag: '🎒 隨身避難包' },
+        { id: 'c6', name: '🔦 LED手電筒', rec: 'go_bag', tag: '🎒 隨身避難包' },
+        { id: 'c7', name: '🛏️ 居家厚棉被', rec: 'home', tag: '🏠 居家儲備' },
+        { id: 'c8', name: '📻 手搖充電收音機', rec: 'go_bag', tag: '🎒 隨身避難包' }
+      ];
+
+      const HAZARD_SCENARIOS = [
+        { id: 'earthquake', name: '地震搖晃', icon: '🌏', keyPrinciple: '趴下 (Drop)、掩護 (Cover)、穩住 (Hold on)。' },
+        { id: 'typhoon_flood', name: '豪雨淹水', icon: '🌧️', keyPrinciple: '切斷電源瓦斯，提早攜避難包往二樓以上高處撤離。' },
+        { id: 'tsunami', name: '海嘯來襲', icon: '🌊', keyPrinciple: '海嘯三原則：「往高處、往內陸、立即行動」。' },
+        { id: 'air_raid', name: '空襲防空', icon: '🚨', keyPrinciple: '進入地下避難處所，採「雙膝跪地拱背遮眼耳嘴微張」姿勢。' }
+      ];
+
+      const MOCK_LOCATIONS = [
+        { id: 'loc_1', name: '建國高級中學避難收容處所 🏫', address: '臺北市中正區南海路56號', type: 'shelter' },
+        { id: 'loc_2', name: '捷運大安站地下防空避難處所 🚇', address: '臺北市大安區信義路四段2號B1', type: 'air_raid' }
+      ];
+
+      // 2. MAIN REACT APP
+      function App() {
+        const [currentStep, setCurrentStep] = useState(0);
+
+        // 家人資料
+        const [members, setMembers] = useState([
+          { id: 'm1', relation: '我', customName: '我', age: '', gender: 'other', height: '', weight: '', specialNeeds: [] }
+        ]);
+
+        // 迷思挑戰關卡狀態 (Step 3 專用)
+        const [mythStageIndex, setMythStageIndex] = useState(0);
+        const [currentBagWeight, setCurrentBagWeight] = useState(3.5);
+        const [selectedWaterOpt, setSelectedWaterOpt] = useState('w_b');
+        const [noodleChecked, setNoodleChecked] = useState(['need_water']);
+        const [selectedCanOpt, setSelectedCanOpt] = useState('can_b');
+        const [selectedBlanketOpt, setSelectedBlanketOpt] = useState('blk_b');
+        const [selectedMedOpt, setSelectedMedOpt] = useState('med_b');
+        const [selectedDocOpt, setSelectedDocOpt] = useState('doc_b');
+        
+        // 迷思 7 減重清單狀態
+        const [heavyItems, setHeavyItems] = useState(MYTH_STAGES_DATA[6].heavyItemsList);
+        const [showMythReveal, setShowMythReveal] = useState(false);
+
+        // 物資分類器與反思狀態
+        const [classifiedItems, setClassifiedItems] = useState({});
+        const [reflectionOne, setReflectionOne] = useState('高熱量能量乾糧或求救哨');
+        const [reflectionTwo, setReflectionTwo] = useState('笨重衣物或多餘玻璃瓶罐');
+        const [reflectionThree, setReflectionThree] = useState('會！若有長者或幼兒，需優先預留重量給尿布、奶粉或慢性處方藥物。');
+
+        // 家庭約定
+        const [primaryPoint, setPrimaryPoint] = useState('住家附近公園正門告示牌');
+        const [secondaryPoint, setSecondaryPoint] = useState('附近國民小學司令台');
+        const [thoughtAnswer, setThoughtAnswer] = useState('若手機網路斷訊，我們約定放學或災害結束後，於「第一集合點大樹下」會合。');
+        const [selectedHazard, setSelectedHazard] = useState(HAZARD_SCENARIOS[0]);
+
+        const activeMember = members[0];
+        const userWeight = Number(activeMember.weight) || 55;
+        const waterRequirementMl = userWeight * 15 * 3;
+        const waterRequirementKg = (waterRequirementMl / 1000).toFixed(2);
+
+        const totalHeavyWeight = heavyItems.reduce((sum, item) => sum + item.weightKg, 0);
+
+        const STEPS = [
+          { id: 0, label: '首頁', icon: '🏠' },
+          { id: 1, label: '認識家人', icon: '👨‍👩‍👧‍👦' },
+          { id: 2, label: '讀小橘書', icon: '📖' },
+          { id: 3, label: '迷思挑戰', icon: '🎒' },
+          { id: 4, label: '認識災害', icon: '🌏' },
+          { id: 5, label: '避難地圖', icon: '📍' },
+          { id: 6, label: '家庭約定', icon: '🤝' },
+          { id: 7, label: '完成計畫', icon: '🛡️' }
+        ];
+
+        const removeHeavyItem = (id) => {
+          setHeavyItems(heavyItems.filter(item => item.id !== id));
+        };
+
+        return (
+          <div className="min-h-screen flex flex-col justify-between text-stone-800">
+            {/* Sticky Header */}
+            <header className="bg-amber-100/90 border-b border-amber-300/80 sticky top-0 z-40 p-3 backdrop-blur-md">
+              <div className="max-w-5xl mx-auto flex items-center justify-between">
+                <button onClick={() => setCurrentStep(0)} className="font-semibold text-amber-950 text-base md:text-lg flex items-center gap-2 cursor-pointer hover:opacity-80">
+                  <span className="text-2xl">🛡️</span>
+                  <span>我的家庭安全避難計畫</span>
+                </button>
+
+                <div className="bg-amber-500 text-white font-medium text-xs px-3.5 py-1.5 rounded-full shadow-xs flex items-center gap-1.5">
+                  <span>{STEPS[currentStep].icon}</span>
+                  <span>STEP {currentStep} / 7：{STEPS[currentStep].label}</span>
+                </div>
+              </div>
+
+              <div className="max-w-5xl mx-auto w-full bg-amber-200 h-2 rounded-full mt-2 overflow-hidden">
+                <div className="bg-orange-500 h-full transition-all duration-300 rounded-full" style={{ width: `${(currentStep / 7) * 100}%` }}></div>
+              </div>
+            </header>
+
+            {/* Main Content */}
+            <main className="max-w-4xl mx-auto p-4 md:p-6 flex-1 w-full space-y-6">
+              {/* PAGE 0: HERO (移除多餘底部「下一步」按鈕，只保留中間亮眼的核心 CTA 按鈕) */}
+              {currentStep === 0 && (
+                <div className="space-y-6 text-center py-2">
+                  <div className="bg-linear-to-b from-orange-100 via-amber-50 to-white p-8 md:p-12 rounded-3xl border border-orange-200 shadow-xs space-y-6">
+                    <div className="inline-flex items-center gap-1.5 bg-orange-500 text-white text-xs font-medium px-4 py-1 rounded-full">
+                      <span>✨ 根據《臺灣全民安全指引》（小橘書）設計</span>
+                    </div>
+
+                    <h1 className="text-3xl md:text-4xl font-bold text-stone-900 leading-tight">
+                      🏠 和家人一起，做好安全準備！
+                    </h1>
+
+                    <p className="text-stone-600 max-w-lg mx-auto text-sm md:text-base leading-relaxed font-normal">
+                      跟著小橘書的步驟，為自己與家人一起打造專屬的家庭避難計畫 🎒
+                    </p>
+
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-2xl mx-auto text-xs font-medium text-stone-700">
+                      <div className="bg-white p-3.5 rounded-2xl border border-amber-200">🎒 迷思挑戰</div>
+                      <div className="bg-white p-3.5 rounded-2xl border border-amber-200">📍 避難地點</div>
+                      <div className="bg-white p-3.5 rounded-2xl border border-amber-200">🧭 災害防護</div>
+                      <div className="bg-white p-3.5 rounded-2xl border border-amber-200">🤝 家庭約定</div>
+                    </div>
+
+                    <button
+                      onClick={() => setCurrentStep(1)}
+                      className="cute-btn px-8 py-3.5 bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white font-bold text-base md:text-lg shadow-md cursor-pointer inline-flex items-center gap-2"
+                    >
+                      <span>開始建立我們的家庭安全計畫 ➔</span>
+                    </button>
+
+                    <div className="flex justify-center gap-4 text-xs text-stone-500 font-normal pt-1">
+                      <span>⏱️ 約 10-15 分鐘</span>
+                      <span>📱 手機電腦皆可</span>
+                      <span>💾 隱私保護自動存檔</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* PAGE 1: FAMILY */}
+              {currentStep === 1 && (
+                <div className="space-y-6">
+                  <div className="space-y-1">
+                    <h2 className="text-2xl font-bold text-stone-900 flex items-center gap-2">
+                      <span>👨‍👩‍👧‍👦</span>
+                      <span>先認識我們家成員與特殊需求</span>
+                    </h2>
+                    <p className="text-xs text-stone-600 font-normal">請填寫家人的年齡、體重與特殊照顧需求：</p>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {members.map((m) => (
+                      <div key={m.id} className="bubble-card p-5 space-y-4">
+                        <div className="flex items-center justify-between border-b border-amber-100 pb-3">
+                          <div className="flex items-center gap-2">
+                            <span className="text-2xl p-1.5 bg-amber-100 rounded-xl">👤</span>
+                            <input
+                              type="text"
+                              value={m.customName}
+                              onChange={(e) => setMembers(members.map(item => item.id === m.id ? { ...item, customName: e.target.value, relation: e.target.value } : item))}
+                              placeholder="填寫稱謂或姓名"
+                              className="font-bold text-stone-900 text-sm bg-stone-50 border border-stone-300 rounded-lg px-2 py-1 w-32"
+                            />
+                          </div>
+                          {members.length > 1 && (
+                            <button
+                              onClick={() => setMembers(members.filter(item => item.id !== m.id))}
+                              className="text-xs text-rose-500 bg-rose-50 px-2 py-1 rounded-lg border border-rose-200 cursor-pointer"
+                            >
+                              🗑 刪除
+                            </button>
+                          )}
+                        </div>
+
+                        <div className="grid grid-cols-3 gap-2 text-xs">
+                          <div>
+                            <label className="block text-stone-600 font-medium mb-1">年齡</label>
+                            <input
+                              type="number"
+                              value={m.age === 0 || m.age === '' ? '' : m.age}
+                              onChange={(e) => setMembers(members.map(item => item.id === m.id ? { ...item, age: e.target.value ? Number(e.target.value) : '' } : item))}
+                              placeholder="如 17"
+                              className="w-full p-2 bg-stone-50 border border-stone-200 rounded-lg font-normal"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-stone-600 font-medium mb-1">性別</label>
+                            <select
+                              value={m.gender}
+                              onChange={(e) => setMembers(members.map(item => item.id === m.id ? { ...item, gender: e.target.value } : item))}
+                              className="w-full p-2 bg-stone-50 border border-stone-200 rounded-lg font-normal"
+                            >
+                              <option value="other">多元/不公開</option>
+                              <option value="male">男性</option>
+                              <option value="female">女性</option>
+                            </select>
+                          </div>
+                          <div>
+                            <label className="block text-stone-600 font-medium mb-1">體重 (kg)</label>
+                            <input
+                              type="number"
+                              value={m.weight === 0 || m.weight === '' ? '' : m.weight}
+                              onChange={(e) => setMembers(members.map(item => item.id === m.id ? { ...item, weight: e.target.value ? Number(e.target.value) : '' } : item))}
+                              placeholder="如 60"
+                              className="w-full p-2 bg-stone-50 border border-stone-200 rounded-lg font-normal"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="bg-amber-50 p-4 rounded-2xl border border-amber-300 text-xs text-amber-950">
+                    💡 主要使用者專屬 3 日飲水量計算：<strong>{waterRequirementMl.toLocaleString()} ml ({waterRequirementKg} kg)</strong> (體重 {userWeight}kg × 15ml × 3天)
+                  </div>
+                </div>
+              )}
+
+              {/* PAGE 2: PREPARE */}
+              {currentStep === 2 && (
+                <div className="space-y-6">
+                  <div className="space-y-1">
+                    <h2 className="text-2xl font-bold text-stone-900 flex items-center gap-2">
+                      <span>📖</span>
+                      <span>讀小橘書：區分隨身避難包與居家儲備</span>
+                    </h2>
+                    <p className="text-xs text-stone-600 font-normal">先讀懂核心原則，等一下進入「避難包迷思挑戰」！</p>
+                  </div>
+
+                  <div className="bg-amber-50 p-6 rounded-2xl border border-amber-300 space-y-4 text-xs">
+                    <div className="font-bold text-stone-900 text-base">🎒 隨身避難包 vs 🏠 居家儲備：</div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="bg-white p-4 rounded-xl border border-amber-200 space-y-1">
+                        <strong className="text-orange-600 text-sm block">🎒 緊急避難包 (隨身帶走)</strong>
+                        <p className="text-stone-600 leading-relaxed font-normal">撤離家園時隨身攜帶，以輕便機動為原則。保存 3 日份飲水、乾糧與醫療器材。</p>
+                      </div>
+                      <div className="bg-white p-4 rounded-xl border border-amber-200 space-y-1">
+                        <strong className="text-orange-600 text-sm block">🏠 居家儲備 (留在家中)</strong>
+                        <p className="text-stone-600 leading-relaxed font-normal">在家防護或物流中斷時使用。保存全家 7 天以上大罐飲水、糧食與瓦斯罐。</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* PAGE 3: GO-BAG MYTH CHALLENGE */}
+              {currentStep === 3 && (
+                <div className="space-y-6">
+                  <div className="space-y-1">
+                    <h2 className="text-2xl md:text-3xl font-bold text-stone-900 flex items-center gap-2">
+                      <span>🎒</span>
+                      <span>如果只能帶一個包，你會怎麼裝？</span>
+                    </h2>
+                    <p className="text-xs md:text-sm text-stone-600 font-normal">
+                      災害發生時，你不可能把家裡全部搬走。在有限的重量與空間中做最聰明的選擇！
+                    </p>
+                  </div>
+
+                  {/* 即時重量儀表板 */}
+                  <div className="bg-stone-900 text-white p-4 rounded-2xl space-y-2 shadow-md">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="font-bold text-amber-400">🎒 我的避難包負重儀表</span>
+                      <span>建議參考：10 kg / 15 kg 上限</span>
+                    </div>
+
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-3xl font-extrabold text-orange-400">
+                        {mythStageIndex === 6 ? totalHeavyWeight.toFixed(1) : currentBagWeight.toFixed(1)}
+                      </span>
+                      <span className="text-sm font-medium">kg</span>
+                      <span className="text-xs text-stone-400 font-normal ml-auto">
+                        {mythStageIndex === 6 && totalHeavyWeight > 15 ? '⚠️ 難以敏捷行走逃生！' : '🟢 負重狀態合宜'}
+                      </span>
+                    </div>
+
+                    <div className="w-full bg-stone-700 h-2.5 rounded-full overflow-hidden">
+                      <div
+                        className={`h-full transition-all duration-300 rounded-full ${
+                          (mythStageIndex === 6 ? totalHeavyWeight : currentBagWeight) > 15 ? 'bg-rose-500' : 'bg-orange-500'
+                        }`}
+                        style={{ width: `${Math.min(100, ((mythStageIndex === 6 ? totalHeavyWeight : currentBagWeight) / 25) * 100)}%` }}
+                      ></div>
+                    </div>
+                  </div>
+
+                  {/* 7 大迷思關卡 */}
+                  {mythStageIndex < 7 && (
+                    <div className="bubble-card p-6 space-y-5">
+                      <div className="flex items-center justify-between border-b pb-3">
+                        <span className="font-bold text-stone-900 text-base">
+                          {MYTH_STAGES_DATA[mythStageIndex].title}
+                        </span>
+                        <span className="text-xs bg-orange-100 text-orange-900 font-medium px-3 py-1 rounded-full">
+                          關卡 {mythStageIndex + 1} / 7
+                        </span>
+                      </div>
+
+                      <p className="text-xs md:text-sm text-stone-700 font-normal leading-relaxed">
+                        {MYTH_STAGES_DATA[mythStageIndex].subtitle}
+                      </p>
+
+                      {/* 關卡 1: 水量選擇 */}
+                      {mythStageIndex === 0 && (
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                          {MYTH_STAGES_DATA[0].options.map(opt => (
+                            <button
+                              key={opt.id}
+                              onClick={() => {
+                                setSelectedWaterOpt(opt.id);
+                                setCurrentBagWeight(3.5 + opt.weightKg);
+                                setShowMythReveal(true);
+                              }}
+                              className={`p-4 rounded-2xl border transition text-left cute-btn ${
+                                selectedWaterOpt === opt.id ? 'bg-orange-500 text-white border-orange-500 font-bold' : 'bg-stone-50 border-stone-200 hover:bg-amber-50'
+                              }`}
+                            >
+                              <div className="text-sm font-bold mb-1">{opt.label}</div>
+                              <div className="text-[11px] opacity-90">重量: +{opt.weightKg} kg ｜ {opt.note}</div>
+                            </button>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* 關卡 2: 泡麵條件 */}
+                      {mythStageIndex === 1 && (
+                        <div className="space-y-3 text-xs">
+                          <div className="font-bold text-stone-900">🍜 把泡麵放入背包 (+0.3kg) 後，你還需要勾選哪些東西才能順利吃掉它？</div>
+                          <div className="grid grid-cols-2 gap-2">
+                            {MYTH_STAGES_DATA[1].noodleItems.map(item => {
+                              const isChecked = noodleChecked.includes(item.id);
+                              return (
+                                <button
+                                  key={item.id}
+                                  onClick={() => {
+                                    const next = isChecked ? noodleChecked.filter(i => i !== item.id) : [...noodleChecked, item.id];
+                                    setNoodleChecked(next);
+                                    setShowMythReveal(true);
+                                  }}
+                                  className={`p-3 rounded-xl border text-left cursor-pointer transition ${
+                                    isChecked ? 'bg-amber-100 border-orange-400 text-orange-950 font-bold' : 'bg-stone-50 border-stone-200'
+                                  }`}
+                                >
+                                  {isChecked ? '☑️ ' : '☐ '}{item.label} (+{item.weightKg}kg)
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* 關卡 3: 罐頭選擇 */}
+                      {mythStageIndex === 2 && (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                          {MYTH_STAGES_DATA[2].options.map(opt => (
+                            <button
+                              key={opt.id}
+                              onClick={() => { setSelectedCanOpt(opt.id); setShowMythReveal(true); }}
+                              className={`p-4 rounded-2xl border text-left cute-btn transition ${
+                                selectedCanOpt === opt.id ? 'bg-orange-500 text-white border-orange-500 font-bold' : 'bg-stone-50 border-stone-200 hover:bg-amber-50'
+                              }`}
+                            >
+                              <div className="text-sm font-bold mb-1">{opt.label}</div>
+                            </button>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* 關卡 4: 棉被選擇 */}
+                      {mythStageIndex === 3 && (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                          {MYTH_STAGES_DATA[3].options.map(opt => (
+                            <button
+                              key={opt.id}
+                              onClick={() => { setSelectedBlanketOpt(opt.id); setShowMythReveal(true); }}
+                              className={`p-4 rounded-2xl border text-left cute-btn transition ${
+                                selectedBlanketOpt === opt.id ? 'bg-orange-500 text-white border-orange-500 font-bold' : 'bg-stone-50 border-stone-200 hover:bg-amber-50'
+                              }`}
+                            >
+                              <div className="text-sm font-bold mb-1">{opt.label}</div>
+                            </button>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* 關卡 5: 急救箱選擇 */}
+                      {mythStageIndex === 4 && (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                          {MYTH_STAGES_DATA[4].options.map(opt => (
+                            <button
+                              key={opt.id}
+                              onClick={() => { setSelectedMedOpt(opt.id); setShowMythReveal(true); }}
+                              className={`p-4 rounded-2xl border text-left cute-btn transition ${
+                                selectedMedOpt === opt.id ? 'bg-orange-500 text-white border-orange-500 font-bold' : 'bg-stone-50 border-stone-200 hover:bg-amber-50'
+                              }`}
+                            >
+                              <div className="text-sm font-bold mb-1">{opt.label}</div>
+                            </button>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* 關卡 6: 文件正本選擇 */}
+                      {mythStageIndex === 5 && (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                          {MYTH_STAGES_DATA[5].options.map(opt => (
+                            <button
+                              key={opt.id}
+                              onClick={() => { setSelectedDocOpt(opt.id); setShowMythReveal(true); }}
+                              className={`p-4 rounded-2xl border text-left cute-btn transition ${
+                                selectedDocOpt === opt.id ? 'bg-orange-500 text-white border-orange-500 font-bold' : 'bg-stone-50 border-stone-200 hover:bg-amber-50'
+                              }`}
+                            >
+                              <div className="text-sm font-bold mb-1">{opt.label}</div>
+                            </button>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* 關卡 7: 28.6 kg 超重拯救 */}
+                      {mythStageIndex === 6 && (
+                        <div className="space-y-4 text-xs">
+                          <div className="bg-rose-50 p-4 rounded-2xl border border-rose-300 space-y-2">
+                            <div className="font-bold text-rose-950 text-base flex items-center gap-2">
+                              <span>😰 人物狀態：太重了！負重 {totalHeavyWeight.toFixed(1)} kg 根本無法逃跑避難！</span>
+                            </div>
+                            <p className="text-stone-700 leading-relaxed font-normal">
+                              🎯 <strong>終極拯救任務：</strong>請點擊下方物品將過重物品拿出背包，嘗試將重量降低至 15 kg 以下！
+                            </p>
+                          </div>
+
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            {heavyItems.map(item => (
+                              <button
+                                key={item.id}
+                                onClick={() => removeHeavyItem(item.id)}
+                                className="p-3 bg-stone-50 rounded-xl border border-stone-200 flex justify-between items-center hover:bg-rose-100 hover:border-rose-300 transition cursor-pointer"
+                              >
+                                <span className="font-medium text-stone-800">{item.name}</span>
+                                <span className="text-rose-600 font-bold">拿出 (-{item.weightKg}kg)</span>
+                              </button>
+                            ))}
+                          </div>
+
+                          {totalHeavyWeight <= 15 && (
+                            <div className="p-4 bg-emerald-100 border border-emerald-400 text-emerald-950 rounded-2xl font-bold text-sm text-center">
+                              🎉 成功將負重降至 {totalHeavyWeight.toFixed(1)} kg！現在避難包變得輕巧靈活囉！
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {/* 揭曉小橘書摘要區 */}
+                      {showMythReveal && (
+                        <div className="bg-amber-50 p-5 rounded-2xl border border-amber-300 space-y-3 text-xs">
+                          <div className="font-bold text-amber-950 text-sm flex items-center gap-1.5">
+                            <span>📖</span>
+                            <span>《臺灣全民安全指引》小橘書解析：</span>
+                          </div>
+                          <p className="text-stone-700 leading-relaxed font-normal">
+                            {MYTH_STAGES_DATA[mythStageIndex].officialText}
+                          </p>
+                          <div className="font-bold text-orange-700 pt-1">
+                            💡 核心觀念：{MYTH_STAGES_DATA[mythStageIndex].conceptText}
+                          </div>
+                        </div>
+                      )}
+
+                      <div className="flex justify-end pt-2">
+                        <button
+                          onClick={() => {
+                            setShowMythReveal(false);
+                            if (mythStageIndex < 6) {
+                              setMythStageIndex(mythStageIndex + 1);
+                            } else {
+                              setMythStageIndex(7);
+                            }
+                          }}
+                          className="cute-btn px-6 py-2.5 bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs md:text-sm cursor-pointer shadow-md"
+                        >
+                          {mythStageIndex < 6 ? '閱讀解析並前往下一個迷思 ➔' : '完成 7 大迷思，看學習總結 ➔'}
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* 完成 7 大迷思後的學習總結 */}
+                  {mythStageIndex >= 7 && (
+                    <div className="space-y-6">
+                      <div className="bubble-card p-6 text-center space-y-3">
+                        <span className="text-4xl">🧠</span>
+                        <h3 className="text-2xl font-bold text-stone-900">你剛剛學到一件極為重要的事情！</h3>
+                        <p className="text-stone-600 max-w-lg mx-auto text-xs md:text-sm font-normal leading-relaxed">
+                          防災不是把所有家當都帶上。而是在有限的 <strong>🎒重量</strong>、<strong>📦空間</strong> 與 <strong>⏱️時間</strong> 中，選擇最適切的防護物品。
+                        </p>
+                      </div>
+
+                      {/* 三問法指南 */}
+                      <div className="bg-amber-50 p-6 rounded-2xl border border-amber-300 space-y-3 text-xs">
+                        <div className="font-bold text-amber-950 text-sm">🤔 遇到任何防災物品時，問自己三件事：</div>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 font-normal">
+                          <div className="bg-white p-3.5 rounded-xl border border-amber-200 space-y-1">
+                            <strong className="text-orange-600 block font-bold">① 要不要準備？</strong>
+                            <p className="text-stone-600">它在避難生命維持中是否真的不可或缺？</p>
+                          </div>
+                          <div className="bg-white p-3.5 rounded-xl border border-amber-200 space-y-1">
+                            <strong className="text-orange-600 block font-bold">② 放在哪裡？</strong>
+                            <p className="text-stone-600">🎒 隨身機動避難包 還是 🏠 居家儲備？</p>
+                          </div>
+                          <div className="bg-white p-3.5 rounded-xl border border-amber-200 space-y-1">
+                            <strong className="text-orange-600 block font-bold">③ 誰需要？</strong>
+                            <p className="text-stone-600">👤 個人專屬物資 還是 👨‍👩‍👧‍👦 全家共用物資？</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* 自由物資分類器 */}
+                      <div className="bubble-card p-5 space-y-4 text-xs">
+                        <div className="font-bold text-stone-900 text-sm border-b pb-2">🔍 互動體驗：試著將物品歸類至正確的防護位置</div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2">
+                          {CLASSIFIER_ITEMS.map(item => {
+                            const currentClass = classifiedItems[item.id] || 'unselected';
+                            return (
+                              <div key={item.id} className="p-3 bg-stone-50 rounded-xl border border-stone-200 space-y-2">
+                                <div className="font-bold text-stone-900">{item.name}</div>
+                                <div className="flex gap-1 text-[11px]">
+                                  <button
+                                    onClick={() => setClassifiedItems({ ...classifiedItems, [item.id]: 'go_bag' })}
+                                    className={`px-2 py-1 rounded-md border cursor-pointer ${currentClass === 'go_bag' ? 'bg-orange-500 text-white font-bold' : 'bg-white'}`}
+                                  >
+                                    🎒 避難包
+                                  </button>
+                                  <button
+                                    onClick={() => setClassifiedItems({ ...classifiedItems, [item.id]: 'home' })}
+                                    className={`px-2 py-1 rounded-md border cursor-pointer ${currentClass === 'home' ? 'bg-amber-600 text-white font-bold' : 'bg-white'}`}
+                                  >
+                                    🏠 居家
+                                  </button>
+                                </div>
+                                {currentClass !== 'unselected' && (
+                                  <div className="text-[10px] text-stone-500">
+                                    建議放置：<strong>{item.tag}</strong>
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      {/* 前後對照卡 */}
+                      <div className="bubble-card p-6 space-y-4">
+                        <div className="font-bold text-stone-900 text-base border-b pb-2 text-center md:text-left">
+                          📊 你的避難包改變了（前後對照卡）
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                          <div className="bg-stone-50 p-4 rounded-xl border border-stone-200 space-y-2">
+                            <div className="font-bold text-rose-700 text-sm">挑戰前盲點背包 🎒 (約 12.8 kg)</div>
+                            <ul className="space-y-1 text-stone-600 leading-relaxed font-normal">
+                              <li>❌ 💧 4.8 kg 大量水（過重）</li>
+                              <li>❌ 🍜 泡麵與烹煮大鍋具（需水源熱源）</li>
+                              <li>❌ 🥫 4 個大金屬罐頭（體積過大）</li>
+                              <li>❌ 🛏️ 厚棉被（塞爆背包）</li>
+                            </ul>
+                          </div>
+
+                          <div className="bg-emerald-50 p-4 rounded-xl border border-emerald-300 space-y-2">
+                            <div className="font-bold text-emerald-900 text-sm">挑戰後優化避難包 🎒 (約 8.2 kg)</div>
+                            <ul className="space-y-1 text-stone-800 leading-relaxed font-normal">
+                              <li>✅ 💧 2.4 kg 適量飲水（3日生命維持）</li>
+                              <li>✅ 🍙 即食乾糧與能量棒（免烹煮即食）</li>
+                              <li>✅ 🧥 輕量鋁箔保暖毯（輕便好攜帶）</li>
+                              <li>✅ 🩹 常用外傷敷料與個人處方藥</li>
+                            </ul>
+                          </div>
+                        </div>
+
+                        <div className="text-center py-2 space-y-1">
+                          <div className="text-2xl font-bold text-orange-600">↓ 成功優化 4.6 kg 負重</div>
+                          <p className="text-xs text-stone-500 font-normal">「少帶，不代表準備得比較少。而是把有限的重量留給更重要的物資。」</p>
+                        </div>
+
+                        <button
+                          onClick={() => {
+                            setCurrentStep(4);
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                          }}
+                          className="cute-btn w-full py-3.5 bg-orange-500 hover:bg-orange-600 text-white font-bold text-sm md:text-base shadow-md cursor-pointer flex items-center justify-center gap-2"
+                        >
+                          <span>修正我的家庭避難包並前往下一階段：認識災害 ➔</span>
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* PAGE 4: HAZARDS */}
+              {currentStep === 4 && (
+                <div className="space-y-6">
+                  <div className="space-y-1">
+                    <h2 className="text-2xl font-bold text-stone-900 flex items-center gap-2">
+                      <span>🌏</span>
+                      <span>災害來了，不同危險需要不同避難方式</span>
+                    </h2>
+                    <p className="text-xs text-stone-600 font-normal">點選災害查看詳細防護步驟：</p>
+                  </div>
+
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    {HAZARD_SCENARIOS.map(h => (
+                      <button
+                        key={h.id}
+                        onClick={() => setSelectedHazard(h)}
+                        className={`p-3.5 rounded-xl border text-xs font-medium transition cute-btn flex flex-col items-center gap-1.5 ${
+                          selectedHazard.id === h.id ? 'bg-orange-500 text-white border-orange-500 shadow-md font-bold' : 'bg-white text-stone-800 border-amber-200 hover:bg-amber-50'
+                        }`}
+                      >
+                        <span className="text-3xl">{h.icon}</span>
+                        <span>{h.name}</span>
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="bubble-card p-6 space-y-3 text-xs font-normal">
+                    <div className="font-bold text-base text-stone-900">{selectedHazard.icon} {selectedHazard.name} 防護重點</div>
+                    <div className="bg-amber-50 p-4 rounded-xl border border-amber-200 text-stone-800 leading-relaxed">
+                      🧭 核心防護原則：{selectedHazard.keyPrinciple}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* PAGE 5: MAP */}
+              {currentStep === 5 && (
+                <div className="space-y-6">
+                  <div className="space-y-1">
+                    <h2 className="text-2xl font-bold text-stone-900 flex items-center gap-2">
+                      <span>📍</span>
+                      <span>找到適合的避難地點與官方查詢管道</span>
+                    </h2>
+                    <p className="text-xs text-stone-600 font-normal">了解地震收容處所與防空處所差異：</p>
+                  </div>
+
+                  <div className="bubble-card p-5 space-y-3 text-xs">
+                    <div className="font-bold text-stone-900 text-sm">🟢 避難處所示範列表</div>
+                    <div className="space-y-2">
+                      {MOCK_LOCATIONS.map(loc => (
+                        <div key={loc.id} className="p-3 bg-stone-50 rounded-xl border border-stone-200 flex justify-between items-center">
+                          <div>
+                            <div className="font-bold text-stone-900">{loc.name}</div>
+                            <div className="text-stone-500 font-normal">{loc.address}</div>
+                          </div>
+                          <span className="bg-orange-100 text-orange-900 font-medium px-3 py-1 rounded-full text-[11px]">
+                            {loc.type === 'air_raid' ? '防空處所' : '避難收容處所'}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* PAGE 6: FAMILY PLAN */}
+              {currentStep === 6 && (
+                <div className="space-y-6">
+                  <div className="space-y-1">
+                    <h2 className="text-2xl font-bold text-stone-900 flex items-center gap-2">
+                      <span>🤝</span>
+                      <span>和家人建立集合地點與通訊約定</span>
+                    </h2>
+                    <p className="text-xs text-stone-600 font-normal">約定好實體集合點與通訊備案：</p>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                    <div className="bubble-card p-5 space-y-3">
+                      <div className="font-bold text-stone-900 text-sm">📍 第一家庭集合點</div>
+                      <input
+                        type="text"
+                        value={primaryPoint}
+                        onChange={(e) => setPrimaryPoint(e.target.value)}
+                        className="w-full p-3 bg-stone-50 border border-stone-200 rounded-xl font-normal"
+                      />
+                    </div>
+                    <div className="bubble-card p-5 space-y-3">
+                      <div className="font-bold text-stone-900 text-sm">🏫 第二家庭集合點 (跨區備用)</div>
+                      <input
+                        type="text"
+                        value={secondaryPoint}
+                        onChange={(e) => setSecondaryPoint(e.target.value)}
+                        className="w-full p-3 bg-stone-50 border border-stone-200 rounded-xl font-normal"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* PAGE 7: FINAL COMPREHENSIVE REPORT */}
+              {currentStep === 7 && (
+                <div className="bubble-card p-6 md:p-8 space-y-6 print-card">
+                  <div className="border-b-2 border-amber-200 pb-4 text-center md:text-left space-y-1">
+                    <div className="flex items-center justify-between">
+                      <h2 className="text-2xl md:text-3xl font-bold text-stone-900">🛡️ 我的家庭安全避難計畫書</h2>
+                      <span className="text-xs bg-amber-500 text-white font-bold px-3 py-1 rounded-full print-hidden">完整詳盡版</span>
+                    </div>
+                    <p className="text-xs text-stone-500 font-normal">產出日期：{new Date().toLocaleDateString('zh-TW')} ｜ 依據《臺灣全民安全指引》（小橘書）規範製作</p>
+                  </div>
+
+                  <div className="space-y-2 text-xs">
+                    <h3 className="font-bold text-stone-900 text-sm border-b pb-1">一、家庭成員數值與特殊照顧需求對照表</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
+                      {members.map((m) => (
+                        <div key={m.id} className="p-3 bg-stone-50 rounded-xl border border-stone-200 space-y-1">
+                          <div className="font-bold text-stone-900">{m.customName} ({m.relation})</div>
+                          <div className="text-stone-600">年齡：{m.age || '未填'} 歲 ｜ 性別：{m.gender === 'male' ? '男' : m.gender === 'female' ? '女' : '多元'} ｜ 體重：{m.weight || '未填'} kg</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="space-y-2 text-xs">
+                    <h3 className="font-bold text-stone-900 text-sm border-b pb-1">二、避難包迷思挑戰學習對照</h3>
+                    <div className="p-3 bg-amber-50 rounded-xl border border-amber-200 space-y-1 font-normal text-stone-800">
+                      <div>💧 飲水量規格：<strong>{waterRequirementMl.toLocaleString()} ml ({waterRequirementKg} kg)</strong></div>
+                      <div>💭 增加物資選擇：<strong>{reflectionOne}</strong></div>
+                      <div>💭 減少物資選擇：<strong>{reflectionTwo}</strong></div>
+                      <div>💭 特殊照護考量：<strong>{reflectionThree}</strong></div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2 text-xs">
+                    <h3 className="font-bold text-stone-900 text-sm border-b pb-1">三、家庭實體集合點與斷訊默契</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div className="p-3 bg-stone-50 rounded-xl border border-stone-200">
+                        <div className="font-bold text-orange-700">📍 第一集合點：</div>
+                        <div className="font-medium text-stone-900">{primaryPoint}</div>
+                      </div>
+                      <div className="p-3 bg-stone-50 rounded-xl border border-stone-200">
+                        <div className="font-bold text-orange-700">🏫 第二集合點：</div>
+                        <div className="font-medium text-stone-900">{secondaryPoint}</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => window.print()}
+                    className="cute-btn w-full py-4 bg-orange-500 hover:bg-orange-600 text-white font-bold text-base shadow-md cursor-pointer flex items-center justify-center gap-2 print-hidden"
+                  >
+                    <span>🖨️ 列印 / 另存為 PDF (帶回家貼冰箱！)</span>
+                  </button>
+                </div>
+              )}
+            </main>
+
+            {/* Navigation Footer (只在 currentStep > 0 時顯示，避免首頁重複出現多的「下一步」按鈕) */}
+            {currentStep > 0 && (
+              <footer className="sticky bottom-0 bg-white/95 border-t border-amber-200 p-3.5 backdrop-blur-md z-30 shadow-md">
+                <div className="max-w-4xl mx-auto flex items-center justify-between gap-3">
+                  <button
+                    onClick={() => { setCurrentStep(currentStep - 1); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                    className="cute-btn px-5 py-2.5 border border-stone-300 text-stone-700 bg-white hover:bg-stone-50 text-xs font-medium cursor-pointer"
+                  >
+                    ← 上一步
+                  </button>
+
+                  {currentStep < 7 && (
+                    <button
+                      onClick={() => { setCurrentStep(currentStep + 1); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                      className="cute-btn ml-auto px-7 py-2.5 bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white font-bold text-sm md:text-base shadow-md cursor-pointer flex items-center gap-1.5"
+                    >
+                      <span>下一步 →</span>
+                    </button>
+                  )}
+                </div>
+              </footer>
+            )}
+          </div>
+        );
+      }
+
+      ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
+  </body>
+</html>
