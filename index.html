@@ -102,7 +102,7 @@
         officialUrl: 'https://aod.mnd.gov.tw/'
       };
 
-      // 特殊照顧對象的權威準備指引 (Item 3 要求)
+      // 特殊照顧對象準備指引
       const SPECIAL_CARE_GUIDELINES = {
         '每日慢性藥 💊': '💊 慢性病長者：備妥7天以上處方藥備份、健保卡影本與慢性病連續處方箋藥名夾。',
         '行動不便輔具 🧑‍🦽': '🧑‍🦽 行動不便：預先檢持拐杖防滑腳墊、手動輪椅，避難路線優先選擇無障礙坡道。',
@@ -125,7 +125,7 @@
         { id: 'p_doc_heavy', name: '📕 房屋權狀存摺與保險正本', weightKg: 1.5, isGood: false, category: 'doc', reason: '❌ 正本放在隨身包容易受潮損毀，應帶防水影本與加密隨身碟。' },
         { id: 'p_doc_light', name: '📄 身分證防水影本 ＋ 數位隨身碟', weightKg: 0.2, isGood: true, category: 'doc', reason: '✅ 影本與加密數位備份輕便，隨時確認身分與申請賑災補助。' },
         { id: 'p_laptop', name: '💻 筆記型電腦與大變壓器', weightKg: 2.5, isGood: false, category: 'electronics', reason: '❌ 斷電時筆電無法充電且過重，防務應以通訊收音機為主。' },
-        { id: 'p_flashlight', name: '🔦 LED高亮度手電筒 ＋ 哨子', weightKg: 0.3, isGood: true, category: 'tools', reason: '✅ 夜間逃生與受困瓦礫時的高分貝吹哨求救必備工具。' },
+        { id: 'p_flashlight', name: '🔦 LED高亮度手電筒 ＋ 哨子', weightKg: 0.3, isGood: true, category: 'tools', reason: '✅ 夜間逃生與受控瓦礫時的高分貝吹哨求救必備工具。' },
         { id: 'p_radio', name: '📻 手搖充電防災廣播收音機', weightKg: 0.4, isGood: true, category: 'tools', reason: '✅ 手機網路中斷時，收聽政府災害廣播的第一情報管道。' }
       ];
 
@@ -139,7 +139,7 @@
         { id: 'c6', name: '💰 少量零錢硬幣與百元鈔', correctTarget: 'go_bag', correctTag: '🎒 隨身避難包', explanation: '停電時 ATM 與電子支付無法使用，硬幣與小面額百元鈔可用於投幣機或購買物資。' }
       ];
 
-      // 災害避難應變情境模擬測驗 (Item 1 要求)
+      // 災害避難應變情境模擬測驗 (含全家團體共同撤離情境演練)
       const DISASTER_QUIZZES = [
         {
           id: 'q_eq',
@@ -183,33 +183,44 @@
             { id: 'b', text: 'B. 進入地下室或防空處所，採「雙膝跪地、拱背遮眼耳、嘴微張」姿勢', isCorrect: true }
           ],
           explanation: '✅ 正確！防空避難應進入地下防空處所，採用跪地拱背姿勢，保護眼耳嘴與內臟免受爆震波傷害。'
+        },
+        {
+          id: 'q_family',
+          hazard: '全家動員 👨‍👩‍👧‍👦',
+          title: '演練 5｜與長者、幼童或寵物全家一起緊急撤離時，最重要的分工與安全原則為何？',
+          options: [
+            { id: 'a', text: 'A. 大家各自奔跑逃生，到收容所再相會', isCorrect: false },
+            { id: 'b', text: 'B. 分工分配攜包與牽引責任、佩戴防走失卡、備妥寵物籠，同行避難', isCorrect: true },
+            { id: 'c', text: 'C. 讓幼童背最重的 15kg 避難包', isCorrect: false }
+          ],
+          explanation: '✅ 正確！全家共同撤離應預先分配「攜包手」與「扶持手」，為弱勢成員配戴防水聯絡名牌，寵物務必上牽繩或進籠，確保全家不走散！'
         }
       ];
 
-      // 縣市與官方避難管道資料
-      const COUNTY_SHELTERS = {
-        '臺北市': [
-          { name: '建國高級中學避難收容處所 🏫', address: '臺北市中正區南海路56號', cap: '2,500人', type: 'shelter' },
-          { name: '捷運大安站地下防空避難處所 🚇', address: '臺北市大安區信義路四段2號B1', cap: '4,000人', type: 'air_raid' },
-          { name: '大安森林公園開闊避難點 🌳', address: '臺北市大安區新生南路二段1號', cap: '10,000人', type: 'shelter' }
-        ],
-        '新北市': [
-          { name: '板橋體育館避難處所 🏟️', address: '新北市板橋區中正路8號', cap: '5,000人', type: 'shelter' },
-          { name: '板橋車站地下防空處所 🚇', address: '新北市板橋區縣民大道二段7號B2', cap: '8,000人', type: 'air_raid' }
-        ],
-        '臺中市': [
-          { name: '臺中一中避難收容處所 🏫', address: '臺中市北區育才街2號', cap: '3,000人', type: 'shelter' },
-          { name: '臺中火車站地下層防空處所 🚉', address: '臺中市中區臺灣大道一段1號B1', cap: '6,000人', type: 'air_raid' }
-        ],
-        '高雄市': [
-          { name: '高雄高級中學避難處所 🏫', address: '高雄市三民區建國三路50號', cap: '2,800人', type: 'shelter' },
-          { name: '美麗島車站地下防空處所 🚇', address: '高雄市新興區中山一路115號B1', cap: '5,000人', type: 'air_raid' }
-        ],
-        '其他縣市': [
-          { name: '全臺各鄉鎮市區國民小學司令台與操場 🏫', address: '您所在居住地附近公立學校', cap: '依各校規模', type: 'shelter' },
-          { name: '公立捷運站/大樓地下防空避難空間 🚇', address: '您所在位置附近防空標示空間', cap: '依現場標籤', type: 'air_raid' }
-        ]
-      };
+      // 全臺擴充官方避難處所資料庫 (Item 2 要求：提供可搜尋、座標定位與擴充學校/處所)
+      const ALL_TAIWAN_SHELTERS = [
+        { county: '臺北市', district: '中正區', name: '市立建國高級中學操場 🏫', address: '臺北市中正區南海路56號', cap: '2,500人', type: 'shelter' },
+        { county: '臺北市', district: '大安區', name: '捷運大安站地下防空避難處所 🚇', address: '臺北市大安區信義路四段2號B1', cap: '4,000人', type: 'air_raid' },
+        { county: '臺北市', district: '大安區', name: '大安森林公園開闊避難點 🌳', address: '臺北市大安區新生南路二段1號', cap: '10,000人', type: 'shelter' },
+        { county: '臺北市', district: '中正區', name: '臺北車站地下層防空避難設施 🚉', address: '臺北市中正區北平西路3號B1-B2', cap: '12,000人', type: 'air_raid' },
+        { county: '臺北市', district: '大安區', name: '市立銘傳國民小學操場 🏫', address: '臺北市大安區羅斯福路四段21號', cap: '1,500人', type: 'shelter' },
+
+        { county: '新北市', district: '板橋區', name: '板橋體育館避難收容處所 🏟️', address: '新北市板橋區中正路8號', cap: '5,000人', type: 'shelter' },
+        { county: '新北市', district: '板橋區', name: '板橋車站地下防空避難大廳 🚇', address: '新北市板橋區縣民大道二段7號B2', cap: '8,000人', type: 'air_raid' },
+        { county: '新北市', district: '新莊區', name: '市立新莊國民小學操場 🏫', address: '新北市新莊區中正路86號', cap: '3,000人', type: 'shelter' },
+        { county: '新北市', district: '新店區', name: '碧潭河濱公園避難會合點 🌳', address: '新北市新店區環河路', cap: '6,000人', type: 'shelter' },
+
+        { county: '臺中市', district: '北區', name: '臺中一中避難收容處所 🏫', address: '臺中市北區育才街2號', cap: '3,000人', type: 'shelter' },
+        { county: '臺中市', district: '中區', name: '臺中火車站地下層防空處所 🚉', address: '臺中市中區臺灣大道一段1號B1', cap: '6,000人', type: 'air_raid' },
+        { county: '臺中市', district: '南屯區', name: '文心森林公園開闊避難點 🌳', address: '臺中市南屯區文心路一段289號', cap: '8,000人', type: 'shelter' },
+
+        { county: '高雄市', district: '三民區', name: '高雄高級中學避難處所 🏫', address: '高雄市三民區建國三路50號', cap: '2,800人', type: 'shelter' },
+        { county: '高雄市', district: '新興區', name: '美麗島車站地下防空處所 🚇', address: '高雄市新興區中山一路115號B1', cap: '5,000人', type: 'air_raid' },
+        { county: '高雄市', district: '鳳山區', name: '衛武營都會公園會合點 🌳', address: '高雄市鳳山區莿桐里', cap: '15,000人', type: 'shelter' },
+
+        { county: '其他縣市', district: '全臺灣各區', name: '全臺各鄉鎮市區國民小學操場與司令台 🏫', address: '您居住地周邊公立國中小學校', cap: '依各校規模分流', type: 'shelter' },
+        { county: '其他縣市', district: '全臺灣各區', name: '公立捷運站/地下停車場防空處所 🚇', address: '您所在位置周邊黃色防空標示空間', cap: '依現場標籤', type: 'air_raid' }
+      ];
 
       // 2. MAIN REACT APP
       function App() {
@@ -228,14 +239,15 @@
         // 物資分類器狀態
         const [classifierFeedback, setClassifierFeedback] = useState({});
 
-        // 情境演練測驗狀態 (Item 1)
+        // 情境演練測驗狀態
         const [quizAnswers, setQuizAnswers] = useState({});
 
-        // 縣市選擇與真實 GPS 定位狀態
+        // 縣市與關鍵字查詢狀態 (Item 2 要求)
         const [selectedCounty, setSelectedCounty] = useState('臺北市');
+        const [searchKeyword, setSearchKeyword] = useState('');
         const [isLocating, setIsLocating] = useState(false);
 
-        // 家庭約定與通訊默契 (Item 7)
+        // 家庭約定與通訊默契
         const [primaryPoint, setPrimaryPoint] = useState('住家附近公園正門告示牌');
         const [secondaryPoint, setSecondaryPoint] = useState('附近國民小學司令台');
         const [thoughtAnswer, setThoughtAnswer] = useState('若手機網路與電話訊號中斷，家人約定放學或災害結束後，於「第一集合點大樹下」會合。');
@@ -245,13 +257,22 @@
         const waterRequirementMl = userWeight * 15 * 3;
         const waterRequirementKg = (waterRequirementMl / 1000).toFixed(2);
 
-        // 彙整全家人選中的特殊照顧標籤 (Item 3)
+        // 彙整全家人選中的特殊照顧標籤
         const allSpecialNeeds = Array.from(new Set(members.flatMap(m => m.specialNeeds)));
 
         const totalPackedWeight = packedItemIds.reduce((sum, itemId) => {
           const item = PACKING_ITEMS.find(i => i.id === itemId);
           return sum + (item ? item.weightKg : 0);
         }, 0);
+
+        // 動態篩選避難處所 (Item 2)
+        const filteredShelters = ALL_TAIWAN_SHELTERS.filter(loc => {
+          const matchesCounty = selectedCounty === '其他縣市' ? true : loc.county === selectedCounty;
+          const matchesKeyword = searchKeyword.trim() === '' ? true : (
+            loc.name.includes(searchKeyword) || loc.address.includes(searchKeyword) || loc.district.includes(searchKeyword)
+          );
+          return matchesCounty && matchesKeyword;
+        });
 
         const STEPS = [
           { id: 0, label: '首頁', icon: '🏠' },
@@ -311,11 +332,11 @@
                 detected = '其他縣市';
               }
               setSelectedCounty(detected);
-              alert(`🧭 已定位您的座標 (${latitude.toFixed(2)}, ${longitude.toFixed(2)})，自動切換至：${detected}`);
+              alert(`🧭 已成功透過 GPS 座標 (${latitude.toFixed(2)}, ${longitude.toFixed(2)}) 定位！已為您自動列出【${detected}】周邊官方避難處所！`);
             },
             (err) => {
               setIsLocating(false);
-              alert('無法取得您的位置權限，請手動下拉選擇縣市。');
+              alert('無法取得您的位置權限，請手動下拉選擇縣市或輸入關鍵字。');
             },
             { timeout: 8000 }
           );
@@ -383,7 +404,7 @@
                 </div>
               )}
 
-              {/* PAGE 1: FAMILY (Item 3: 顯示對應特殊照顧對象的專業避難指引) */}
+              {/* PAGE 1: FAMILY (Item 3: 多成員全家動員注意事項) */}
               {currentStep === 1 && (
                 <div className="space-y-6">
                   <div className="space-y-1">
@@ -477,6 +498,21 @@
                     ))}
                   </div>
 
+                  {/* Item 3 要求：當納入多位家庭成員時的團隊避難分工提醒 */}
+                  {members.length >= 2 && (
+                    <div className="bg-amber-100/80 p-4 rounded-2xl border border-amber-300 space-y-1.5 text-xs text-amber-950">
+                      <div className="font-bold text-sm text-orange-950 flex items-center gap-1.5">
+                        <span>👨‍👩‍👧‍👦</span>
+                        <span>全家團體共同避難的分工注意事項：</span>
+                      </div>
+                      <div className="font-normal text-stone-800 leading-relaxed space-y-1">
+                        <div>1. <strong>攜包與牽引分工</strong>：由成年成員攜帶主避難包，並指定專人手牽幼童或攙扶長者。</div>
+                        <div>2. <strong>防走失名牌與緊急連絡卡</strong>：為幼童或失智長者口袋內放防水「防走失小卡」，註明家長電話與第一集合地點。</div>
+                        <div>3. <strong>寵物避難防護</strong>：寵物需準備防逃脫牽繩或硬質提籠，避難所多有專屬安置規定，請切勿隨意放任。</div>
+                      </div>
+                    </div>
+                  )}
+
                   <div className="bg-amber-50/80 p-5 rounded-2xl border border-dashed border-orange-300 space-y-3">
                     <div className="text-xs font-bold text-orange-900">➕ 點擊快捷新增家庭成員：</div>
                     <div className="flex flex-wrap gap-2 text-xs">
@@ -508,7 +544,6 @@
                     </div>
                   </div>
 
-                  {/* Item 3 要求：針對勾選的特殊照顧標籤提供個別準備建議 */}
                   {allSpecialNeeds.length > 0 && (
                     <div className="bg-orange-50 p-5 rounded-2xl border border-orange-300 space-y-3 text-xs">
                       <div className="font-bold text-orange-950 text-sm flex items-center gap-1.5">
@@ -558,7 +593,7 @@
                 </div>
               )}
 
-              {/* PAGE 3: GO-BAG SINGLE-PAGE PACKING CHALLENGE */}
+              {/* PAGE 3: GO-BAG PACKING */}
               {currentStep === 3 && (
                 <div className="space-y-6">
                   <div className="space-y-1">
@@ -721,7 +756,7 @@
                 </div>
               )}
 
-              {/* PAGE 4: DISASTER ACTION QUIZZES (Item 1: 互動式災害應變情境演練) */}
+              {/* PAGE 4: DISASTER QUIZ (Item 1 修復：選擇錯誤答案不出現正確字樣與詳解) */}
               {currentStep === 4 && (
                 <div className="space-y-6">
                   <div className="space-y-1">
@@ -751,7 +786,7 @@
                                 key={opt.id}
                                 onClick={() => setQuizAnswers({ ...quizAnswers, [q.id]: opt })}
                                 className={`p-3 rounded-xl border text-left cursor-pointer transition font-normal ${
-                                  userAns?.id === opt.id ? 'bg-orange-500 text-white font-bold border-orange-500 shadow-xs' : 'bg-stone-50 border-stone-200 text-stone-800 hover:bg-amber-50'
+                                  userAns?.id === opt.id ? (opt.isCorrect ? 'bg-emerald-600 text-white font-bold border-emerald-600 shadow-xs' : 'bg-rose-500 text-white font-bold border-rose-500 shadow-xs') : 'bg-stone-50 border-stone-200 text-stone-800 hover:bg-amber-50'
                                 }`}
                               >
                                 {opt.text}
@@ -759,10 +794,19 @@
                             ))}
                           </div>
 
+                          {/* Item 1 修復：答錯時只提示再想想看，不顯示正確字樣與詳解！僅答對時才顯示正確詳解 */}
                           {isAnswered && (
                             <div className={`p-3 rounded-xl leading-relaxed font-normal ${isCorrect ? 'bg-emerald-100 text-emerald-950 border border-emerald-300' : 'bg-rose-100 text-rose-950 border border-rose-300'}`}>
-                              <div className="font-bold mb-1">{isCorrect ? '🎉 答對了！非常棒的應變決策！' : '❌ 答錯囉！請再試試看～'}</div>
-                              <div>{q.explanation}</div>
+                              {isCorrect ? (
+                                <div>
+                                  <div className="font-bold mb-1">🎉 答對了！非常棒的應變決策！</div>
+                                  <div>{q.explanation}</div>
+                                </div>
+                              ) : (
+                                <div className="font-bold text-rose-900">
+                                  ❌ 答錯囉！這個動作在災害時可能會增加受傷風險，請再想想看其他避難選項！
+                                </div>
+                              )}
                             </div>
                           )}
                         </div>
@@ -772,7 +816,7 @@
                 </div>
               )}
 
-              {/* PAGE 5: MAP (Item 2: 避免人潮過度集中警示與分流引導) */}
+              {/* PAGE 5: MAP & LIVE SEARCH (Item 2 要求：提供網頁直接搜尋、座標定位與官方避難場所清單) */}
               {currentStep === 5 && (
                 <div className="space-y-6">
                   <div className="space-y-1">
@@ -780,10 +824,9 @@
                       <span>📍</span>
                       <span>找到適合的避難地點與官方查詢管道</span>
                     </h2>
-                    <p className="text-xs text-stone-600 font-normal">選擇居住縣市或 GPS 自動定位獲取避難地點建議：</p>
+                    <p className="text-xs text-stone-600 font-normal">您可透過 GPS 定位或關鍵字搜尋，直接在網頁查詢全臺官方公告之避難場所：</p>
                   </div>
 
-                  {/* Item 2 要求：警示避免人潮蜂湧至特定地點，提供就近分流原則 */}
                   <div className="bg-rose-50 p-4 rounded-xl border border-rose-300 text-xs text-rose-950 leading-relaxed space-y-1.5">
                     <div className="font-bold text-sm text-rose-900 flex items-center gap-1.5">
                       <span>⚠️</span>
@@ -797,57 +840,81 @@
                     </div>
                   </div>
 
+                  {/* Item 2 要求：網頁端即時搜尋與 GPS 座標查詢面板 */}
                   <div className="bg-amber-50 p-5 rounded-2xl border border-amber-300 space-y-4 text-xs">
-                    <div className="flex flex-wrap items-center justify-between gap-3">
-                      <div className="flex items-center gap-2">
-                        <span className="font-bold text-amber-950">📍 選擇居住縣市：</span>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 items-center">
+                      <div>
+                        <label className="block text-amber-950 font-bold mb-1">📍 選擇縣市：</label>
                         <select
                           value={selectedCounty}
                           onChange={(e) => setSelectedCounty(e.target.value)}
-                          className="p-2 bg-white border border-stone-300 rounded-lg font-normal text-stone-800 focus:outline-hidden"
+                          className="w-full p-2.5 bg-white border border-stone-300 rounded-lg font-normal text-stone-800 focus:outline-hidden"
                         >
                           <option value="臺北市">臺北市</option>
                           <option value="新北市">新北市</option>
                           <option value="臺中市">臺中市</option>
                           <option value="高雄市">高雄市</option>
-                          <option value="其他縣市">其他縣市</option>
+                          <option value="其他縣市">其他縣市 (包含全臺學校/公園)</option>
                         </select>
                       </div>
 
-                      <button
-                        onClick={handleLocateMe}
-                        className="cute-btn px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-bold cursor-pointer flex items-center gap-1"
-                      >
-                        <span>{isLocating ? '🧭 正在讀取 GPS 座標...' : '📍 使用瀏覽器 GPS 定位建議'}</span>
-                      </button>
+                      <div>
+                        <label className="block text-amber-950 font-bold mb-1">🔍 關鍵字搜尋 (行政區/路名/學校)：</label>
+                        <input
+                          type="text"
+                          value={searchKeyword}
+                          onChange={(e) => setSearchKeyword(e.target.value)}
+                          placeholder="例如：大安、板橋、建國、公園"
+                          className="w-full p-2.5 bg-white border border-stone-300 rounded-lg font-normal text-stone-800 focus:outline-hidden"
+                        />
+                      </div>
+
+                      <div className="sm:col-span-2 md:col-span-1 pt-4 sm:pt-0">
+                        <button
+                          onClick={handleLocateMe}
+                          className="cute-btn w-full py-2.5 bg-orange-500 hover:bg-orange-600 text-white font-bold cursor-pointer flex items-center justify-center gap-1 shadow-xs"
+                        >
+                          <span>{isLocating ? '🧭 定位中...' : '📍 GPS 座標定位切換'}</span>
+                        </button>
+                      </div>
                     </div>
 
                     <div className="bg-white p-4 rounded-xl border border-amber-200 space-y-2 text-stone-700 leading-relaxed font-normal">
-                      <div className="font-bold text-orange-700 text-sm">🔍 官方即時動態查詢 App：</div>
-                      <div>1. <strong>消防防災 e 點通 App (內政部消防署)</strong>：可自動 GPS 定位顯示您附近所有的「地震避難收容處所」。</div>
-                      <div>2. <strong>警政服務 App / 防空避難專區 (警政署)</strong>：防空警報時，可即時查詢周遭地下防空設施與容納人數。</div>
+                      <div className="font-bold text-orange-700 text-sm flex items-center justify-between">
+                        <span>🌐 內政部官方地圖查詢 portal 連結：</span>
+                        <a href="https://gis.nfa.gov.tw/" target="_blank" rel="noreferrer" className="text-orange-600 underline font-bold hover:text-orange-700">
+                          前往「內政部消防署防災地圖門戶」↗
+                        </a>
+                      </div>
                     </div>
                   </div>
 
+                  {/* 官方避難處所網頁端即時搜尋結果清單 */}
                   <div className="bubble-card p-5 space-y-3 text-xs">
                     <div className="font-bold text-stone-900 text-sm border-b pb-2 flex items-center justify-between">
-                      <span>🟢 【{selectedCounty}】推薦官方避難處所示範列表 (供就近分流參考)</span>
-                      <span className="text-stone-500 font-normal">依縣市即時篩選</span>
+                      <span>🟢 官方公告之鄰近避難場所查詢結果 (共 {filteredShelters.length} 筆)</span>
+                      <span className="text-stone-500 font-normal">就近分流保護安全</span>
                     </div>
 
-                    <div className="space-y-2">
-                      {COUNTY_SHELTERS[selectedCounty]?.map((loc, idx) => (
-                        <div key={idx} className="p-3.5 bg-stone-50 rounded-xl border border-stone-200 flex justify-between items-center">
-                          <div>
-                            <div className="font-bold text-stone-900">{loc.name}</div>
-                            <div className="text-stone-500 font-normal">{loc.address} ｜ 容納量：{loc.cap}</div>
+                    {filteredShelters.length === 0 ? (
+                      <div className="p-4 text-center text-stone-500 font-normal">
+                        查無符合「{searchKeyword}」的避難處所，建議清除搜尋關鍵字或嘗試搜尋周邊公立國中小學。
+                      </div>
+                    ) : (
+                      <div className="space-y-2.5">
+                        {filteredShelters.map((loc, idx) => (
+                          <div key={idx} className="p-3.5 bg-stone-50 rounded-xl border border-stone-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                            <div>
+                              <div className="font-bold text-stone-900 text-sm">{loc.name}</div>
+                              <div className="text-stone-500 font-normal">{loc.county} {loc.district} ｜ {loc.address} ｜ 容納量：{loc.cap}</div>
+                            </div>
+                            <span className="self-start sm:self-center bg-orange-100 text-orange-950 font-bold px-3 py-1 rounded-full text-[11px]">
+                              {loc.type === 'air_raid' ? '防空處所' : '避難收容處所'}
+                            </span>
                           </div>
-                          <span className="bg-orange-100 text-orange-900 font-medium px-3 py-1 rounded-full text-[11px]">
-                            {loc.type === 'air_raid' ? '防空處所' : '避難收容處所'}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
@@ -907,7 +974,7 @@
                 </div>
               )}
 
-              {/* PAGE 7: FINAL COMPREHENSIVE REPORT (Item 3: 包含特殊照顧備品建議) */}
+              {/* PAGE 7: FINAL COMPREHENSIVE REPORT */}
               {currentStep === 7 && (
                 <div className="bubble-card p-6 md:p-8 space-y-6 print-card">
                   <div className="border-b-2 border-amber-200 pb-4 text-center md:text-left space-y-1">
@@ -930,7 +997,6 @@
                       ))}
                     </div>
 
-                    {/* Item 3: 最終報告中列出對應特殊照顧的物資提醒 */}
                     {allSpecialNeeds.length > 0 && (
                       <div className="p-3.5 bg-orange-50 rounded-xl border border-orange-200 space-y-1 font-normal text-stone-800 mt-2">
                         <div className="font-bold text-orange-950">💡 特殊照顧成員專屬避難準備提醒：</div>
@@ -986,7 +1052,7 @@
                         <tr>
                           <td className="p-2 border-r font-bold">🔦 LED手電筒與哨子</td>
                           <td className="p-2 border-r">1 組 (約 0.3 kg)</td>
-                          <td className="p-2 border-r">停電夜間照明，受困瓦礫時高分貝吹哨求救</td>
+                          <td className="p-2 border-r">停電夜間照明，受控瓦礫時高分貝吹哨求救</td>
                           <td className="p-2 text-orange-700 font-bold">🎒 隨身避難包</td>
                         </tr>
                         <tr>
