@@ -37444,17 +37444,6 @@
         "source":  "MOI"
     },
     {
-        "county":  "臺中市東區",
-        "district":  "",
-        "name":  "臺中市東區樂業國小",
-        "address":  "樂業路60號",
-        "cap":  "泉源、旱溪、樂成.",
-        "type":  "shelter",
-        "lat":  24.138354,
-        "lng":  120.194202,
-        "source":  "MOI"
-    },
-    {
         "county":  "臺中市太平區",
         "district":  "",
         "name":  "宜欣國小〈宜學樓、南大樓〉",
