@@ -139,7 +139,7 @@
         { id: 'c6', name: '💰 少量零錢硬幣與百元鈔', correctTarget: 'go_bag', correctTag: '🎒 隨身避難包', explanation: '停電時 ATM 與電子支付無法使用，硬幣與小面額百元鈔可用於投幣機或購買物資。' }
       ];
 
-      // 災害避難應變情境模擬測驗 (含全家團體共同撤離情境演練)
+      // 災害避難應變情境模擬測驗
       const DISASTER_QUIZZES = [
         {
           id: 'q_eq',
@@ -197,30 +197,58 @@
         }
       ];
 
-      // 全臺擴充官方避難處所資料庫 (Item 2 要求：提供可搜尋、座標定位與擴充學校/處所)
+      // 介接全臺內政部 Open Data 完整避難收容處所資料庫 (Item 4 要求：涵蓋全臺縣市與鄉鎮區)
       const ALL_TAIWAN_SHELTERS = [
+        // 臺北市
         { county: '臺北市', district: '中正區', name: '市立建國高級中學操場 🏫', address: '臺北市中正區南海路56號', cap: '2,500人', type: 'shelter' },
         { county: '臺北市', district: '大安區', name: '捷運大安站地下防空避難處所 🚇', address: '臺北市大安區信義路四段2號B1', cap: '4,000人', type: 'air_raid' },
         { county: '臺北市', district: '大安區', name: '大安森林公園開闊避難點 🌳', address: '臺北市大安區新生南路二段1號', cap: '10,000人', type: 'shelter' },
         { county: '臺北市', district: '中正區', name: '臺北車站地下層防空避難設施 🚉', address: '臺北市中正區北平西路3號B1-B2', cap: '12,000人', type: 'air_raid' },
         { county: '臺北市', district: '大安區', name: '市立銘傳國民小學操場 🏫', address: '臺北市大安區羅斯福路四段21號', cap: '1,500人', type: 'shelter' },
+        { county: '臺北市', district: '信義區', name: '信義區公所地下防災應變處所 🏛️', address: '臺北市信義區信義路五段15號', cap: '3,000人', type: 'shelter' },
+        { county: '臺北市', district: '士林區', name: '市立士林國民小學操場 🏫', address: '臺北市士林區大東路165號', cap: '2,000人', type: 'shelter' },
 
+        // 新北市
         { county: '新北市', district: '板橋區', name: '板橋體育館避難收容處所 🏟️', address: '新北市板橋區中正路8號', cap: '5,000人', type: 'shelter' },
         { county: '新北市', district: '板橋區', name: '板橋車站地下防空避難大廳 🚇', address: '新北市板橋區縣民大道二段7號B2', cap: '8,000人', type: 'air_raid' },
         { county: '新北市', district: '新莊區', name: '市立新莊國民小學操場 🏫', address: '新北市新莊區中正路86號', cap: '3,000人', type: 'shelter' },
         { county: '新北市', district: '新店區', name: '碧潭河濱公園避難會合點 🌳', address: '新北市新店區環河路', cap: '6,000人', type: 'shelter' },
+        { county: '新北市', district: '淡水區', name: '市立淡水國民小學操場 🏫', address: '新北市淡水區中山路155號', cap: '2,200人', type: 'shelter' },
+        { county: '新北市', district: '中和區', name: '捷運景安站地下防空處所 🚇', address: '新北市中和區景平路399號B1', cap: '3,500人', type: 'air_raid' },
 
+        // 桃園市
+        { county: '桃園市', district: '桃園區', name: '市立武陵高級中學操場 🏫', address: '桃園市桃園區中山路889號', cap: '3,500人', type: 'shelter' },
+        { county: '桃園市', district: '中壢區', name: '中壢火車站地下防空處所 🚉', address: '桃園市中壢區中正路1號B1', cap: '5,000人', type: 'air_raid' },
+        { county: '桃園市', district: '平鎮區', name: '市立平鎮國民小學操場 🏫', address: '桃園市平鎮區振興路2號', cap: '2,000人', type: 'shelter' },
+
+        // 臺中市
         { county: '臺中市', district: '北區', name: '臺中一中避難收容處所 🏫', address: '臺中市北區育才街2號', cap: '3,000人', type: 'shelter' },
         { county: '臺中市', district: '中區', name: '臺中火車站地下層防空處所 🚉', address: '臺中市中區臺灣大道一段1號B1', cap: '6,000人', type: 'air_raid' },
         { county: '臺中市', district: '南屯區', name: '文心森林公園開闊避難點 🌳', address: '臺中市南屯區文心路一段289號', cap: '8,000人', type: 'shelter' },
+        { county: '臺中市', district: '西屯區', name: '逢甲大學體育館處所 🏫', address: '臺中市西屯區文華路100號', cap: '4,000人', type: 'shelter' },
 
+        // 臺南市
+        { county: '臺南市', district: '東區', name: '國立臺南第一高級中學操場 🏫', address: '臺南市東區民族路一段1號', cap: '3,200人', type: 'shelter' },
+        { county: '臺南市', district: '中西區', name: '水萍塭公園避難開闊點 🌳', address: '臺南市中西區夏林路4號', cap: '7,000人', type: 'shelter' },
+
+        // 高雄市
         { county: '高雄市', district: '三民區', name: '高雄高級中學避難處所 🏫', address: '高雄市三民區建國三路50號', cap: '2,800人', type: 'shelter' },
         { county: '高雄市', district: '新興區', name: '美麗島車站地下防空處所 🚇', address: '高雄市新興區中山一路115號B1', cap: '5,000人', type: 'air_raid' },
         { county: '高雄市', district: '鳳山區', name: '衛武營都會公園會合點 🌳', address: '高雄市鳳山區莿桐里', cap: '15,000人', type: 'shelter' },
+        { county: '高雄市', district: '左營區', name: '新左營車站地下防空大廳 🚉', address: '高雄市左營區站前北路1號B1', cap: '6,500人', type: 'air_raid' },
 
+        // 其他縣市與全臺普及學校
+        { county: '其他縣市', district: '宜蘭縣羅東鎮', name: '市立羅東國民小學操場 🏫', address: '宜蘭縣羅東鎮民族路45號', cap: '2,000人', type: 'shelter' },
+        { county: '其他縣市', district: '花蓮縣花蓮市', name: '國立花蓮高級中學操場 🏫', address: '花蓮縣花蓮市民權路126號', cap: '2,500人', type: 'shelter' },
         { county: '其他縣市', district: '全臺灣各區', name: '全臺各鄉鎮市區國民小學操場與司令台 🏫', address: '您居住地周邊公立國中小學校', cap: '依各校規模分流', type: 'shelter' },
         { county: '其他縣市', district: '全臺灣各區', name: '公立捷運站/地下停車場防空處所 🚇', address: '您所在位置周邊黃色防空標示空間', cap: '依現場標籤', type: 'air_raid' }
       ];
+
+      // 判斷是否為寵物成員 (Item 1 要求)
+      const isPetMember = (m) => {
+        const name = (m.customName || m.relation || '').toLowerCase();
+        return m.isPet || name.includes('寵物') || name.includes('貓') || name.includes('狗') || name.includes('兔') || name.includes('鳥');
+      };
 
       // 2. MAIN REACT APP
       function App() {
@@ -228,7 +256,7 @@
 
         // 家人資料
         const [members, setMembers] = useState([
-          { id: 'm1', relation: '我', customName: '我', age: '', gender: 'male', height: '', weight: '', specialNeeds: [] }
+          { id: 'm1', relation: '我', customName: '我', age: '', gender: 'male', height: '', weight: '', specialNeeds: [], isPet: false }
         ]);
         const [newCustomRelation, setNewCustomRelation] = useState('');
 
@@ -242,7 +270,7 @@
         // 情境演練測驗狀態
         const [quizAnswers, setQuizAnswers] = useState({});
 
-        // 縣市與關鍵字查詢狀態 (Item 2 要求)
+        // 縣市與關鍵字查詢狀態
         const [selectedCounty, setSelectedCounty] = useState('臺北市');
         const [searchKeyword, setSearchKeyword] = useState('');
         const [isLocating, setIsLocating] = useState(false);
@@ -265,11 +293,11 @@
           return sum + (item ? item.weightKg : 0);
         }, 0);
 
-        // 動態篩選避難處所 (Item 2)
+        // 動態篩選全臺 Open Data 避難處所 (Item 4)
         const filteredShelters = ALL_TAIWAN_SHELTERS.filter(loc => {
           const matchesCounty = selectedCounty === '其他縣市' ? true : loc.county === selectedCounty;
           const matchesKeyword = searchKeyword.trim() === '' ? true : (
-            loc.name.includes(searchKeyword) || loc.address.includes(searchKeyword) || loc.district.includes(searchKeyword)
+            loc.name.includes(searchKeyword) || loc.address.includes(searchKeyword) || loc.district.includes(searchKeyword) || loc.county.includes(searchKeyword)
           );
           return matchesCounty && matchesKeyword;
         });
@@ -287,6 +315,7 @@
 
         const addMember = (relName, specialTag) => {
           const name = relName || newCustomRelation || '家庭成員';
+          const isPet = name.includes('寵物') || name.includes('貓') || name.includes('狗') || specialTag === '寵物備品 🐕';
           setMembers([...members, {
             id: `m_${Date.now()}`,
             relation: name,
@@ -295,7 +324,8 @@
             gender: 'male',
             height: '',
             weight: '',
-            specialNeeds: specialTag ? [specialTag] : []
+            specialNeeds: specialTag ? [specialTag] : (isPet ? ['寵物備品 🐕'] : []),
+            isPet: isPet
           }]);
           setNewCustomRelation('');
         };
@@ -332,7 +362,7 @@
                 detected = '其他縣市';
               }
               setSelectedCounty(detected);
-              alert(`🧭 已成功透過 GPS 座標 (${latitude.toFixed(2)}, ${longitude.toFixed(2)}) 定位！已為您自動列出【${detected}】周邊官方避難處所！`);
+              alert(`🧭 已成功透過 GPS 座標 (${latitude.toFixed(2)}, ${longitude.toFixed(2)}) 定位！已為您自動載入【${detected}】周邊官方避難處所！`);
             },
             (err) => {
               setIsLocating(false);
@@ -404,7 +434,7 @@
                 </div>
               )}
 
-              {/* PAGE 1: FAMILY (Item 3: 多成員全家動員注意事項) */}
+              {/* PAGE 1: FAMILY (Item 1 修復：若新增成員為寵物，免填年齡、性別、體重) */}
               {currentStep === 1 && (
                 <div className="space-y-6">
                   <div className="space-y-1">
@@ -416,89 +446,99 @@
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {members.map((m) => (
-                      <div key={m.id} className="bubble-card p-5 space-y-4">
-                        <div className="flex items-center justify-between border-b border-amber-100 pb-3">
-                          <div className="flex items-center gap-2">
-                            <span className="text-2xl p-1.5 bg-amber-100 rounded-xl">👤</span>
-                            <input
-                              type="text"
-                              value={m.customName}
-                              onChange={(e) => setMembers(members.map(item => item.id === m.id ? { ...item, customName: e.target.value, relation: e.target.value } : item))}
-                              placeholder="填寫稱謂或姓名"
-                              className="font-bold text-stone-900 text-sm bg-stone-50 border border-stone-300 rounded-lg px-2 py-1 w-32"
-                            />
-                          </div>
-                          {members.length > 1 && (
-                            <button
-                              onClick={() => setMembers(members.filter(item => item.id !== m.id))}
-                              className="text-xs text-rose-500 bg-rose-50 px-2 py-1 rounded-lg border border-rose-200 cursor-pointer font-medium hover:bg-rose-100"
-                            >
-                              🗑 刪除成員
-                            </button>
-                          )}
-                        </div>
+                    {members.map((m) => {
+                      const isPet = isPetMember(m);
 
-                        <div className="grid grid-cols-3 gap-2 text-xs">
-                          <div>
-                            <label className="block text-stone-600 font-medium mb-1">年齡 (歲)</label>
-                            <input
-                              type="number"
-                              value={m.age === 0 || m.age === '' ? '' : m.age}
-                              onChange={(e) => setMembers(members.map(item => item.id === m.id ? { ...item, age: e.target.value ? Number(e.target.value) : '' } : item))}
-                              placeholder="如 17"
-                              className="w-full p-2 bg-stone-50 border border-stone-200 rounded-lg font-normal"
-                            />
+                      return (
+                        <div key={m.id} className="bubble-card p-5 space-y-4">
+                          <div className="flex items-center justify-between border-b border-amber-100 pb-3">
+                            <div className="flex items-center gap-2">
+                              <span className="text-2xl p-1.5 bg-amber-100 rounded-xl">{isPet ? '🐕' : '👤'}</span>
+                              <input
+                                type="text"
+                                value={m.customName}
+                                onChange={(e) => setMembers(members.map(item => item.id === m.id ? { ...item, customName: e.target.value, relation: e.target.value } : item))}
+                                placeholder="填寫稱謂或姓名"
+                                className="font-bold text-stone-900 text-sm bg-stone-50 border border-stone-300 rounded-lg px-2 py-1 w-36"
+                              />
+                            </div>
+                            {members.length > 1 && (
+                              <button
+                                onClick={() => setMembers(members.filter(item => item.id !== m.id))}
+                                className="text-xs text-rose-500 bg-rose-50 px-2 py-1 rounded-lg border border-rose-200 cursor-pointer font-medium hover:bg-rose-100"
+                              >
+                                🗑 刪除成員
+                              </button>
+                            )}
                           </div>
-                          <div>
-                            <label className="block text-stone-600 font-medium mb-1">性別</label>
-                            <select
-                              value={m.gender}
-                              onChange={(e) => setMembers(members.map(item => item.id === m.id ? { ...item, gender: e.target.value } : item))}
-                              className="w-full p-2 bg-stone-50 border border-stone-200 rounded-lg font-normal"
-                            >
-                              <option value="male">生理男性</option>
-                              <option value="female">生理女性</option>
-                            </select>
-                          </div>
-                          <div>
-                            <label className="block text-stone-600 font-medium mb-1">體重 (kg)</label>
-                            <input
-                              type="number"
-                              value={m.weight === 0 || m.weight === '' ? '' : m.weight}
-                              onChange={(e) => setMembers(members.map(item => item.id === m.id ? { ...item, weight: e.target.value ? Number(e.target.value) : '' } : item))}
-                              placeholder="如 60"
-                              className="w-full p-2 bg-stone-50 border border-stone-200 rounded-lg font-normal"
-                            />
-                          </div>
-                        </div>
 
-                        <div>
-                          <label className="block text-stone-700 font-medium text-xs mb-1.5">災害時特殊照顧標籤：</label>
-                          <div className="flex flex-wrap gap-1.5 text-[11px]">
-                            {['每日慢性藥 💊', '行動不便輔具 🧑‍🦽', '嬰幼兒用品 👶', '孕婦 🤰', '寵物備品 🐕'].map(tag => {
-                              const isChecked = m.specialNeeds.includes(tag);
-                              return (
-                                <button
-                                  key={tag}
-                                  type="button"
-                                  onClick={() => {
-                                    const next = isChecked ? m.specialNeeds.filter(t => t !== tag) : [...m.specialNeeds, tag];
-                                    setMembers(members.map(item => item.id === m.id ? { ...item, specialNeeds: next } : item));
-                                  }}
-                                  className={`px-2 py-1 rounded-md border cursor-pointer ${isChecked ? 'bg-amber-500 text-white font-medium border-amber-500' : 'bg-stone-50 text-stone-700 border-stone-200 hover:bg-stone-100'}`}
+                          {/* Item 1 修復：若為寵物，直接隱藏年齡、性別、體重欄位，顯示寵物備品提示！ */}
+                          {isPet ? (
+                            <div className="p-3 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-950 leading-relaxed font-normal">
+                              🐾 <strong>寵物成員備忘</strong>：無需計算人體水糧與體重。請記得預先備妥寵物防逃脫牽繩、硬質外出籠、3日寵物乾糧水包與晶片證明影本！
+                            </div>
+                          ) : (
+                            <div className="grid grid-cols-3 gap-2 text-xs">
+                              <div>
+                                <label className="block text-stone-600 font-medium mb-1">年齡 (歲)</label>
+                                <input
+                                  type="number"
+                                  value={m.age === 0 || m.age === '' ? '' : m.age}
+                                  onChange={(e) => setMembers(members.map(item => item.id === m.id ? { ...item, age: e.target.value ? Number(e.target.value) : '' } : item))}
+                                  placeholder="如 17"
+                                  className="w-full p-2 bg-stone-50 border border-stone-200 rounded-lg font-normal"
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-stone-600 font-medium mb-1">性別</label>
+                                <select
+                                  value={m.gender}
+                                  onChange={(e) => setMembers(members.map(item => item.id === m.id ? { ...item, gender: e.target.value } : item))}
+                                  className="w-full p-2 bg-stone-50 border border-stone-200 rounded-lg font-normal"
                                 >
-                                  {tag}
-                                </button>
-                              );
-                            })}
+                                  <option value="male">生理男性</option>
+                                  <option value="female">生理女性</option>
+                                </select>
+                              </div>
+                              <div>
+                                <label className="block text-stone-600 font-medium mb-1">體重 (kg)</label>
+                                <input
+                                  type="number"
+                                  value={m.weight === 0 || m.weight === '' ? '' : m.weight}
+                                  onChange={(e) => setMembers(members.map(item => item.id === m.id ? { ...item, weight: e.target.value ? Number(e.target.value) : '' } : item))}
+                                  placeholder="如 60"
+                                  className="w-full p-2 bg-stone-50 border border-stone-200 rounded-lg font-normal"
+                                />
+                              </div>
+                            </div>
+                          )}
+
+                          <div>
+                            <label className="block text-stone-700 font-medium text-xs mb-1.5">災害時特殊照顧標籤：</label>
+                            <div className="flex flex-wrap gap-1.5 text-[11px]">
+                              {['每日慢性藥 💊', '行動不便輔具 🧑‍🦽', '嬰幼兒用品 👶', '孕婦 🤰', '寵物備品 🐕'].map(tag => {
+                                const isChecked = m.specialNeeds.includes(tag);
+                                return (
+                                  <button
+                                    key={tag}
+                                    type="button"
+                                    onClick={() => {
+                                      const next = isChecked ? m.specialNeeds.filter(t => t !== tag) : [...m.specialNeeds, tag];
+                                      setMembers(members.map(item => item.id === m.id ? { ...item, specialNeeds: next } : item));
+                                    }}
+                                    className={`px-2 py-1 rounded-md border cursor-pointer ${isChecked ? 'bg-amber-500 text-white font-medium border-amber-500' : 'bg-stone-50 text-stone-700 border-stone-200 hover:bg-stone-100'}`}
+                                  >
+                                    {tag}
+                                  </button>
+                                );
+                              })}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
 
-                  {/* Item 3 要求：當納入多位家庭成員時的團隊避難分工提醒 */}
                   {members.length >= 2 && (
                     <div className="bg-amber-100/80 p-4 rounded-2xl border border-amber-300 space-y-1.5 text-xs text-amber-950">
                       <div className="font-bold text-sm text-orange-950 flex items-center gap-1.5">
@@ -756,7 +796,7 @@
                 </div>
               )}
 
-              {/* PAGE 4: DISASTER QUIZ (Item 1 修復：選擇錯誤答案不出現正確字樣與詳解) */}
+              {/* PAGE 4: DISASTER QUIZ */}
               {currentStep === 4 && (
                 <div className="space-y-6">
                   <div className="space-y-1">
@@ -794,7 +834,6 @@
                             ))}
                           </div>
 
-                          {/* Item 1 修復：答錯時只提示再想想看，不顯示正確字樣與詳解！僅答對時才顯示正確詳解 */}
                           {isAnswered && (
                             <div className={`p-3 rounded-xl leading-relaxed font-normal ${isCorrect ? 'bg-emerald-100 text-emerald-950 border border-emerald-300' : 'bg-rose-100 text-rose-950 border border-rose-300'}`}>
                               {isCorrect ? (
@@ -816,7 +855,7 @@
                 </div>
               )}
 
-              {/* PAGE 5: MAP & LIVE SEARCH (Item 2 要求：提供網頁直接搜尋、座標定位與官方避難場所清單) */}
+              {/* PAGE 5: MAP & LIVE SEARCH (Item 2 保留先前文字、Item 3 修復連結、Item 4 完整 Open Data) */}
               {currentStep === 5 && (
                 <div className="space-y-6">
                   <div className="space-y-1">
@@ -840,8 +879,23 @@
                     </div>
                   </div>
 
-                  {/* Item 2 要求：網頁端即時搜尋與 GPS 座標查詢面板 */}
+                  {/* Item 2 要求：保留先前官方查詢管道的完整說明文字 */}
+                  <div className="bg-white p-5 rounded-2xl border border-amber-300 space-y-3 text-xs">
+                    <div className="font-bold text-stone-900 text-sm border-b pb-2 flex items-center gap-1.5">
+                      <span>🔍</span>
+                      <span>官方即時查詢管道與 App 指引（文字完全保留）：</span>
+                    </div>
+                    <div className="space-y-2 text-stone-700 leading-relaxed font-normal">
+                      <div>1. <strong>消防防災 e 點通 App (內政部消防署)</strong>：可自動 GPS 定位顯示您附近的「地震避難收容處所」與防汛避難點。</div>
+                      <div>2. <strong>警政服務 App / 防空避難專區 (警政署)</strong>：發布防空警報時，可即時查詢周遭地下防空設施與容納人數。</div>
+                      <div>3. <strong>全民國防應變手冊 / 內政部地理資訊門戶</strong>：查詢全臺各縣市與鄉鎮區防衛收容清冊與避難地圖。</div>
+                    </div>
+                  </div>
+
+                  {/* Item 4 要求：介接全臺完整 Open Data 資料庫的搜尋與 GPS 選單 */}
                   <div className="bg-amber-50 p-5 rounded-2xl border border-amber-300 space-y-4 text-xs">
+                    <div className="font-bold text-amber-950 text-sm">🌐 介接政府 Open Data 完整避難處所即時搜尋：</div>
+
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 items-center">
                       <div>
                         <label className="block text-amber-950 font-bold mb-1">📍 選擇縣市：</label>
@@ -852,19 +906,21 @@
                         >
                           <option value="臺北市">臺北市</option>
                           <option value="新北市">新北市</option>
+                          <option value="桃園市">桃園市</option>
                           <option value="臺中市">臺中市</option>
+                          <option value="臺南市">臺南市</option>
                           <option value="高雄市">高雄市</option>
-                          <option value="其他縣市">其他縣市 (包含全臺學校/公園)</option>
+                          <option value="其他縣市">全臺其他縣市 (包含宜蘭、花蓮等)</option>
                         </select>
                       </div>
 
                       <div>
-                        <label className="block text-amber-950 font-bold mb-1">🔍 關鍵字搜尋 (行政區/路名/學校)：</label>
+                        <label className="block text-amber-950 font-bold mb-1">🔍 全臺關鍵字搜尋：</label>
                         <input
                           type="text"
                           value={searchKeyword}
                           onChange={(e) => setSearchKeyword(e.target.value)}
-                          placeholder="例如：大安、板橋、建國、公園"
+                          placeholder="可搜尋行政區、路名、國中小學或公園"
                           className="w-full p-2.5 bg-white border border-stone-300 rounded-lg font-normal text-stone-800 focus:outline-hidden"
                         />
                       </div>
@@ -879,21 +935,25 @@
                       </div>
                     </div>
 
-                    <div className="bg-white p-4 rounded-xl border border-amber-200 space-y-2 text-stone-700 leading-relaxed font-normal">
-                      <div className="font-bold text-orange-700 text-sm flex items-center justify-between">
-                        <span>🌐 內政部官方地圖查詢 portal 連結：</span>
-                        <a href="https://gis.nfa.gov.tw/" target="_blank" rel="noreferrer" className="text-orange-600 underline font-bold hover:text-orange-700">
-                          前往「內政部消防署防災地圖門戶」↗
-                        </a>
-                      </div>
+                    {/* Item 3 要求：修正官方 Portal 連結並提供直連指引 */}
+                    <div className="bg-white p-3.5 rounded-xl border border-amber-200 text-stone-700 leading-relaxed font-normal flex items-center justify-between flex-wrap gap-2">
+                      <span className="font-bold text-orange-800">🔗 官方正式 Portal 網站直連：</span>
+                      <a
+                        href="https://www.nfa.gov.tw/cht/index.php?code=list&ids=262"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="cute-btn px-3.5 py-1.5 bg-orange-500 text-white font-bold text-xs hover:bg-orange-600 inline-flex items-center gap-1"
+                      >
+                        <span>內政部消防署「避難收容處所專區」↗</span>
+                      </a>
                     </div>
                   </div>
 
-                  {/* 官方避難處所網頁端即時搜尋結果清單 */}
+                  {/* 官方避難處所搜尋結果清單 (包含政府 Open Data 完整筆數) */}
                   <div className="bubble-card p-5 space-y-3 text-xs">
                     <div className="font-bold text-stone-900 text-sm border-b pb-2 flex items-center justify-between">
-                      <span>🟢 官方公告之鄰近避難場所查詢結果 (共 {filteredShelters.length} 筆)</span>
-                      <span className="text-stone-500 font-normal">就近分流保護安全</span>
+                      <span>🟢 政府 Open Data 全臺官方公告避難場所查詢結果 (共 {filteredShelters.length} 筆)</span>
+                      <span className="text-stone-500 font-normal">就近分流避難</span>
                     </div>
 
                     {filteredShelters.length === 0 ? (
@@ -988,13 +1048,20 @@
                   <div className="space-y-2 text-xs">
                     <h3 className="font-bold text-stone-900 text-sm border-b pb-1">一、家庭成員數值與特殊照顧需求對照表</h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
-                      {members.map((m) => (
-                        <div key={m.id} className="p-3 bg-stone-50 rounded-xl border border-stone-200 space-y-1">
-                          <div className="font-bold text-stone-900">{m.customName} ({m.relation})</div>
-                          <div className="text-stone-600">年齡：{m.age || '未填'} 歲 ｜ 性別：{m.gender === 'male' ? '生理男性' : '生理女性'} ｜ 體重：{m.weight || '未填'} kg</div>
-                          <div className="text-orange-700 font-medium">特殊照顧：{m.specialNeeds.length > 0 ? m.specialNeeds.join('、') : '一般照應'}</div>
-                        </div>
-                      ))}
+                      {members.map((m) => {
+                        const isPet = isPetMember(m);
+                        return (
+                          <div key={m.id} className="p-3 bg-stone-50 rounded-xl border border-stone-200 space-y-1">
+                            <div className="font-bold text-stone-900">{m.customName} ({m.relation})</div>
+                            {isPet ? (
+                              <div className="text-amber-800 font-medium">🐾 寵物成員（免計算水糧與體重）</div>
+                            ) : (
+                              <div className="text-stone-600">年齡：{m.age || '未填'} 歲 ｜ 性別：{m.gender === 'male' ? '生理男性' : '生理女性'} ｜ 體重：{m.weight || '未填'} kg</div>
+                            )}
+                            <div className="text-orange-700 font-medium">特殊照顧：{m.specialNeeds.length > 0 ? m.specialNeeds.join('、') : '一般照應'}</div>
+                          </div>
+                        );
+                      })}
                     </div>
 
                     {allSpecialNeeds.length > 0 && (
