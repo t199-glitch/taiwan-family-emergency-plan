@@ -8,10 +8,10 @@
     <title>🛡️ 我的家庭安全避難計畫 | 跟著小橘書做準備</title>
     <meta name="description" content="引導臺灣高中生與家人一起閱讀《臺灣全民安全指引》（小橘書），一步一步建立專屬可愛又實用的家庭避難計畫。" />
     
-    <!-- Google Fonts: Rounded & Friendly Fonts -->
+    <!-- Google Fonts: Crisp Noto Sans TC + Rounded Headers -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=M+PLUS+Rounded+1c:wght@400;700;800&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@700;800&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
 
     <!-- React 18 & Babel Standalone CDN -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
@@ -45,10 +45,6 @@
                 400: '#fb923c',
                 500: '#f97316',
               }
-            },
-            borderRadius: {
-              '4xl': '2rem',
-              '5xl': '2.5rem',
             }
           }
         }
@@ -56,20 +52,26 @@
     </script>
     <style>
       body {
-        font-family: "M PLUS Rounded 1c", "Fredoka", "Noto Sans TC", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-family: "Noto Sans TC", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        font-weight: 400;
         background-color: #fffdfa;
         color: #292524;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      h1, h2, h3, .heading-rounded {
+        font-family: "M PLUS Rounded 1c", "Noto Sans TC", sans-serif;
       }
       .bubble-card {
         background: white;
-        border-radius: 1.75rem;
-        border: 2.5px solid #fed7aa;
-        box-shadow: 0 8px 24px -4px rgba(251, 146, 60, 0.08);
-        transition: all 0.25s ease-in-out;
+        border-radius: 1.5rem;
+        border: 2px solid #fed7aa;
+        box-shadow: 0 4px 16px -2px rgba(251, 146, 60, 0.06);
+        transition: all 0.2s ease-in-out;
       }
       .bubble-card:hover {
         transform: translateY(-2px);
-        box-shadow: 0 12px 28px -4px rgba(251, 146, 60, 0.15);
+        box-shadow: 0 8px 20px -2px rgba(251, 146, 60, 0.12);
         border-color: #fb923c;
       }
       .cute-btn {
@@ -77,10 +79,10 @@
         transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
       }
       .cute-btn:hover {
-        transform: scale(1.04);
+        transform: scale(1.03);
       }
       .cute-btn:active {
-        transform: scale(0.96);
+        transform: scale(0.97);
       }
       @media print {
         header, footer, nav, button, .print-hidden { display: none !important; }
@@ -122,7 +124,6 @@
           id: 'typhoon_flood',
           name: '豪雨淹水',
           icon: '🌧️',
-          category: 'natural',
           shortDesc: '豪雨淹水升溫時，切勿滯留地下室。',
           keyPrinciple: '切斷電源瓦斯，提早攜避難包往二樓以上或高處收容所撤離！',
           quizQuestion: {
@@ -238,16 +239,16 @@
         };
 
         return (
-          <div className="min-h-screen flex flex-col justify-between">
+          <div className="min-h-screen flex flex-col justify-between text-stone-800">
             {/* Header Progress Bar */}
             <header className="bg-amber-100/80 border-b-2 border-amber-300/80 sticky top-0 z-40 p-3 backdrop-blur-md">
               <div className="max-w-5xl mx-auto flex items-center justify-between">
                 <button onClick={() => setCurrentStep(0)} className="font-extrabold text-amber-950 text-base md:text-lg flex items-center gap-2 cursor-pointer hover:opacity-80">
                   <span className="text-2xl">🛡️</span>
-                  <span>我的家庭安全避難計畫</span>
+                  <span className="heading-rounded">我的家庭安全避難計畫</span>
                 </button>
 
-                <div className="bg-amber-500 text-white font-bold text-xs px-3.5 py-1.5 rounded-full shadow-xs flex items-center gap-1.5">
+                <div className="bg-amber-500 text-white font-medium text-xs px-3.5 py-1.5 rounded-full shadow-xs flex items-center gap-1.5">
                   <span>{STEPS[currentStep].icon}</span>
                   <span>STEP {currentStep} / 7：{STEPS[currentStep].label}</span>
                 </div>
@@ -264,35 +265,35 @@
               {/* PAGE 0: HERO */}
               {currentStep === 0 && (
                 <div className="space-y-6 text-center py-4">
-                  <div className="bg-linear-to-b from-orange-100 via-amber-50 to-white p-8 md:p-12 rounded-[2.5rem] border-3 border-orange-200 shadow-sm space-y-6">
-                    <div className="inline-flex items-center gap-1.5 bg-orange-500 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-xs">
+                  <div className="bg-linear-to-b from-orange-100 via-amber-50 to-white p-8 md:p-12 rounded-[2.5rem] border-2 border-orange-200 shadow-xs space-y-6">
+                    <div className="inline-flex items-center gap-1.5 bg-orange-500 text-white text-xs font-medium px-4 py-1 rounded-full">
                       <span>✨ 根據《臺灣全民安全指引》（小橘書）設計</span>
                     </div>
 
-                    <h1 className="text-3xl md:text-5xl font-black text-stone-900 leading-tight">
+                    <h1 className="text-3xl md:text-5xl font-extrabold text-stone-900 leading-tight">
                       🏠 和家人一起，做好安全準備！
                     </h1>
 
-                    <p className="text-stone-700 max-w-lg mx-auto text-sm md:text-base leading-relaxed font-semibold">
+                    <p className="text-stone-600 max-w-lg mx-auto text-sm md:text-base leading-relaxed font-normal">
                       跟著小橘書的可愛步驟，為自己與爸爸媽媽阿嬤一起打造專屬的家庭避難小計畫 🎒
                     </p>
 
                     {/* 4 Feature Cards */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-2xl mx-auto text-xs font-extrabold text-stone-800">
-                      <div className="bg-white p-4 rounded-2xl border-2 border-amber-200 shadow-2xs">🎒 準備什麼</div>
-                      <div className="bg-white p-4 rounded-2xl border-2 border-amber-200 shadow-2xs">📍 去哪避難</div>
-                      <div className="bg-white p-4 rounded-2xl border-2 border-amber-200 shadow-2xs">🧭 怎麼防護</div>
-                      <div className="bg-white p-4 rounded-2xl border-2 border-amber-200 shadow-2xs">👨‍👩‍👧‍👦 家人照應</div>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-2xl mx-auto text-xs font-medium text-stone-700">
+                      <div className="bg-white p-4 rounded-2xl border border-amber-200">🎒 準備什麼</div>
+                      <div className="bg-white p-4 rounded-2xl border border-amber-200">📍 去哪避難</div>
+                      <div className="bg-white p-4 rounded-2xl border border-amber-200">🧭 怎麼防護</div>
+                      <div className="bg-white p-4 rounded-2xl border border-amber-200">👨‍👩‍👧‍👦 家人照應</div>
                     </div>
 
                     <button
                       onClick={() => setCurrentStep(1)}
-                      className="cute-btn px-8 py-4 bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white font-black text-lg md:text-xl shadow-lg cursor-pointer inline-flex items-center gap-2"
+                      className="cute-btn px-8 py-4 bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white font-bold text-lg md:text-xl shadow-md cursor-pointer inline-flex items-center gap-2"
                     >
                       <span>開始建立我們的家庭安全計畫 ➔</span>
                     </button>
 
-                    <div className="flex justify-center gap-4 text-xs text-stone-500 font-semibold pt-2">
+                    <div className="flex justify-center gap-4 text-xs text-stone-500 font-normal pt-2">
                       <span>⏱️ 只要 10 分鐘</span>
                       <span>📱 手機電腦皆可</span>
                       <span>💾 自動存檔免註冊</span>
@@ -303,20 +304,20 @@
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="bubble-card p-5 text-left space-y-2">
                       <div className="text-3xl">🎒</div>
-                      <h3 className="font-extrabold text-stone-900 text-base">我的家庭物資包</h3>
-                      <p className="text-xs text-stone-600 leading-relaxed">幫每一位家人算出 3 日份飲水與背包重量，準備剛好的東西！</p>
+                      <h3 className="font-bold text-stone-900 text-base">我的家庭物資包</h3>
+                      <p className="text-xs text-stone-600 leading-relaxed font-normal">幫每一位家人算出 3 日份飲水與背包重量，準備剛好的東西！</p>
                     </div>
 
                     <div className="bubble-card p-5 text-left space-y-2">
                       <div className="text-3xl">📍</div>
-                      <h3 className="font-extrabold text-stone-900 text-base">我的避難地圖</h3>
-                      <p className="text-xs text-stone-600 leading-relaxed">了解地震、淹水、海嘯與防空時，最適合去的安全地點！</p>
+                      <h3 className="font-bold text-stone-900 text-base">我的避難地圖</h3>
+                      <p className="text-xs text-stone-600 leading-relaxed font-normal">了解地震、淹水、海嘯與防空時，最適合去的安全地點！</p>
                     </div>
 
                     <div className="bubble-card p-5 text-left space-y-2">
                       <div className="text-3xl">🛡️</div>
-                      <h3 className="font-extrabold text-stone-900 text-base">家庭安全計畫書</h3>
-                      <p className="text-xs text-stone-600 leading-relaxed">把集合點、聯絡方式與物資整理成一張計畫表，帶回家貼冰箱！</p>
+                      <h3 className="font-bold text-stone-900 text-base">家庭安全計畫書</h3>
+                      <p className="text-xs text-stone-600 leading-relaxed font-normal">把集合點、聯絡方式與物資整理成一張計畫表，帶回家貼冰箱！</p>
                     </div>
                   </div>
                 </div>
@@ -326,11 +327,11 @@
               {currentStep === 1 && (
                 <div className="space-y-6">
                   <div className="space-y-1">
-                    <h2 className="text-2xl font-black text-stone-900 flex items-center gap-2">
+                    <h2 className="text-2xl font-extrabold text-stone-900 flex items-center gap-2">
                       <span>👨‍👩‍👧‍👦</span>
                       <span>先認識我們家成員</span>
                     </h2>
-                    <p className="text-xs text-stone-600">每個人的體重與需求不一樣，所以準備的避難包也不一樣喔！</p>
+                    <p className="text-xs text-stone-600 font-normal">每個人的體重與需求不一樣，所以準備的避難包也不一樣喔！</p>
                   </div>
 
                   {/* Member Cards Grid */}
@@ -342,31 +343,31 @@
                             <span className="text-3xl p-2 bg-amber-100 rounded-2xl">{m.avatar || '👤'}</span>
                             <div>
                               <h3 className="font-bold text-stone-900 text-base">{m.customName} ({m.relation})</h3>
-                              <p className="text-xs text-stone-500">{m.age} 歲 ｜ 體重 {m.weight} kg</p>
+                              <p className="text-xs text-stone-500 font-normal">{m.age} 歲 ｜ 體重 {m.weight} kg</p>
                             </div>
                           </div>
-                          <span className="text-xs font-bold text-orange-600 bg-orange-100 px-3 py-1 rounded-full">
+                          <span className="text-xs font-medium text-orange-600 bg-orange-100 px-3 py-1 rounded-full">
                             {m.relation === '我' ? '主要的你' : '家人成員'}
                           </span>
                         </div>
 
                         <div className="grid grid-cols-2 gap-3 text-xs">
                           <div>
-                            <label className="block text-stone-700 font-bold mb-1">身高 (cm)</label>
+                            <label className="block text-stone-700 font-medium mb-1">身高 (cm)</label>
                             <input
                               type="number"
                               value={m.height}
                               onChange={(e) => setMembers(members.map(item => item.id === m.id ? { ...item, height: Number(e.target.value) } : item))}
-                              className="w-full p-2.5 bg-stone-50 border-2 border-stone-200 rounded-xl font-bold focus:border-orange-400 focus:outline-hidden"
+                              className="w-full p-2.5 bg-stone-50 border border-stone-200 rounded-xl font-normal focus:border-orange-400 focus:outline-hidden"
                             />
                           </div>
                           <div>
-                            <label className="block text-stone-700 font-bold mb-1">體重 (kg)</label>
+                            <label className="block text-stone-700 font-medium mb-1">體重 (kg)</label>
                             <input
                               type="number"
                               value={m.weight}
                               onChange={(e) => setMembers(members.map(item => item.id === m.id ? { ...item, weight: Number(e.target.value) } : item))}
-                              className="w-full p-2.5 bg-stone-50 border-2 border-stone-200 rounded-xl font-bold focus:border-orange-400 focus:outline-hidden"
+                              className="w-full p-2.5 bg-stone-50 border border-stone-200 rounded-xl font-normal focus:border-orange-400 focus:outline-hidden"
                             />
                           </div>
                         </div>
@@ -376,13 +377,13 @@
 
                   {/* Add Family Quick Buttons */}
                   <div className="bg-amber-50/80 p-5 rounded-3xl border-2 border-dashed border-orange-300 text-center space-y-3">
-                    <div className="text-xs font-extrabold text-orange-900">➕ 點擊新增家裡的成員：</div>
+                    <div className="text-xs font-bold text-orange-900">➕ 點擊新增家裡的成員：</div>
                     <div className="flex flex-wrap justify-center gap-2">
-                      <button onClick={() => addFamilyMember('爸爸', '👨')} className="cute-btn px-4 py-2 bg-white border-2 border-amber-300 text-xs font-bold text-stone-800 shadow-2xs hover:bg-amber-100">＋ 爸爸 👨</button>
-                      <button onClick={() => addFamilyMember('媽媽', '👩')} className="cute-btn px-4 py-2 bg-white border-2 border-amber-300 text-xs font-bold text-stone-800 shadow-2xs hover:bg-amber-100">＋ 媽媽 👩</button>
-                      <button onClick={() => addFamilyMember('阿嬤', '👵')} className="cute-btn px-4 py-2 bg-white border-2 border-amber-300 text-xs font-bold text-stone-800 shadow-2xs hover:bg-amber-100">＋ 阿嬤 👵</button>
-                      <button onClick={() => addFamilyMember('阿公', '👴')} className="cute-btn px-4 py-2 bg-white border-2 border-amber-300 text-xs font-bold text-stone-800 shadow-2xs hover:bg-amber-100">＋ 阿公 👴</button>
-                      <button onClick={() => addFamilyMember('毛孩', '🐕')} className="cute-btn px-4 py-2 bg-white border-2 border-amber-300 text-xs font-bold text-stone-800 shadow-2xs hover:bg-amber-100">＋ 毛孩 🐕</button>
+                      <button onClick={() => addFamilyMember('爸爸', '👨')} className="cute-btn px-4 py-2 bg-white border border-amber-300 text-xs font-medium text-stone-800 shadow-2xs hover:bg-amber-100">＋ 爸爸 👨</button>
+                      <button onClick={() => addFamilyMember('媽媽', '👩')} className="cute-btn px-4 py-2 bg-white border border-amber-300 text-xs font-medium text-stone-800 shadow-2xs hover:bg-amber-100">＋ 媽媽 👩</button>
+                      <button onClick={() => addFamilyMember('阿嬤', '👵')} className="cute-btn px-4 py-2 bg-white border border-amber-300 text-xs font-medium text-stone-800 shadow-2xs hover:bg-amber-100">＋ 阿嬤 👵</button>
+                      <button onClick={() => addFamilyMember('阿公', '👴')} className="cute-btn px-4 py-2 bg-white border border-amber-300 text-xs font-medium text-stone-800 shadow-2xs hover:bg-amber-100">＋ 阿公 👴</button>
+                      <button onClick={() => addFamilyMember('毛孩', '🐕')} className="cute-btn px-4 py-2 bg-white border border-amber-300 text-xs font-medium text-stone-800 shadow-2xs hover:bg-amber-100">＋ 毛孩 🐕</button>
                     </div>
                   </div>
                 </div>
@@ -392,30 +393,30 @@
               {currentStep === 2 && (
                 <div className="space-y-6">
                   <div className="space-y-1">
-                    <h2 className="text-2xl font-black text-stone-900 flex items-center gap-2">
+                    <h2 className="text-2xl font-extrabold text-stone-900 flex items-center gap-2">
                       <span>🎒</span>
                       <span>避難包，真的只是「裝東西」嗎？</span>
                     </h2>
-                    <p className="text-xs text-stone-600">先讀懂小橘書，再開始準備才不會買錯喔！</p>
+                    <p className="text-xs text-stone-600 font-normal">先讀懂小橘書，再開始準備才不會買錯喔！</p>
                   </div>
 
-                  <div className="bg-amber-50 p-6 rounded-3xl border-2 border-amber-300 space-y-4">
+                  <div className="bg-amber-50 p-6 rounded-3xl border border-amber-300 space-y-4">
                     <div className="flex items-center gap-3">
                       <span className="text-4xl">📖</span>
                       <div>
-                        <h3 className="font-extrabold text-stone-900 text-lg">小橘書觀念小筆記</h3>
-                        <p className="text-xs text-amber-900 font-medium">區分「隨身帶走的避難包」與「留在家裡的居家儲備」！</p>
+                        <h3 className="font-bold text-stone-900 text-lg">小橘書觀念小筆記</h3>
+                        <p className="text-xs text-amber-900 font-normal">區分「隨身帶走的避難包」與「留在家裡的居家儲備」！</p>
                       </div>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                      <div className="bg-white p-4 rounded-2xl border-2 border-amber-200 space-y-1">
+                      <div className="bg-white p-4 rounded-2xl border border-amber-200 space-y-1">
                         <div className="font-bold text-orange-600 text-sm">🎒 緊急避難包 (隨身帶)</div>
-                        <p className="text-stone-600">要能機動背著走！保存維持 1～3 天生存基本飲水、乾糧、急救藥物與手電筒。</p>
+                        <p className="text-stone-600 font-normal leading-relaxed">要能機動背著走！保存維持 1～3 天生存基本飲水、乾糧、急救藥物與手電筒。</p>
                       </div>
-                      <div className="bg-white p-4 rounded-2xl border-2 border-amber-200 space-y-1">
+                      <div className="bg-white p-4 rounded-2xl border border-amber-200 space-y-1">
                         <div className="font-bold text-orange-600 text-sm">🏠 居家儲備 (留在家)</div>
-                        <p className="text-stone-600">留在家中停水停電時使用！保存全家 7 天以上的糧食、大罐水與瓦斯罐。</p>
+                        <p className="text-stone-600 font-normal leading-relaxed">留在家中停水停電時使用！保存全家 7 天以上的糧食、大罐水與瓦斯罐。</p>
                       </div>
                     </div>
                   </div>
@@ -426,34 +427,34 @@
               {currentStep === 3 && (
                 <div className="space-y-6">
                   <div className="space-y-1">
-                    <h2 className="text-2xl font-black text-stone-900 flex items-center gap-2">
+                    <h2 className="text-2xl font-extrabold text-stone-900 flex items-center gap-2">
                       <span>🎒</span>
                       <span>我的家庭避難包重量計算</span>
                     </h2>
-                    <p className="text-xs text-stone-600">自動根據體重算水份，幫你把關不背過重！</p>
+                    <p className="text-xs text-stone-600 font-normal">自動根據體重算水份，幫你把關不背過重！</p>
                   </div>
 
                   <div className="bubble-card p-6 text-center space-y-4">
-                    <div className="text-xs font-bold text-stone-500">👦 {activeMember.customName} 的預估背包總重</div>
-                    <div className="text-5xl md:text-6xl font-black text-orange-500">{weightInfo.totalKg} <span className="text-2xl">kg</span></div>
+                    <div className="text-xs font-normal text-stone-500">👦 {activeMember.customName} 的預估背包總重</div>
+                    <div className="text-5xl md:text-6xl font-extrabold text-orange-500">{weightInfo.totalKg} <span className="text-2xl font-medium">kg</span></div>
 
-                    <div className="bg-amber-50 p-3 rounded-2xl border border-amber-200 text-xs text-amber-900 font-bold inline-block">
+                    <div className="bg-amber-50 p-3 rounded-2xl border border-amber-200 text-xs text-amber-900 font-medium inline-block">
                       💧 3日專屬水份：{waterInfo.formattedText} (體重 {activeMember.weight}kg × 15ml × 3天)
                     </div>
 
-                    <div className="text-xs text-stone-500 max-w-md mx-auto">
+                    <div className="text-xs text-stone-500 font-normal max-w-md mx-auto">
                       💡 建議上限：男生約 15 kg / 女生約 10 kg，以能敏捷行走為原則喔！
                     </div>
                   </div>
 
                   {/* Preset Items List */}
-                  <div className="bg-white p-5 rounded-3xl border-2 border-stone-200 space-y-3">
-                    <h3 className="font-extrabold text-stone-900 text-sm border-b pb-2">📋 基本避難包建議清單 (可隨時調整)</h3>
+                  <div className="bg-white p-5 rounded-3xl border border-stone-200 space-y-3">
+                    <h3 className="font-bold text-stone-900 text-sm border-b pb-2">📋 基本避難包建議清單 (可隨時調整)</h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
                       {goBagItems.map(item => (
                         <div key={item.id} className="p-3 bg-stone-50 rounded-2xl border border-stone-200 flex justify-between items-center">
-                          <span className="font-bold text-stone-800">{item.name}</span>
-                          <span className="text-orange-600 font-bold">{(item.estimatedWeightKg * item.quantity).toFixed(2)} kg</span>
+                          <span className="font-normal text-stone-800">{item.name}</span>
+                          <span className="text-orange-600 font-medium">{(item.estimatedWeightKg * item.quantity).toFixed(2)} kg</span>
                         </div>
                       ))}
                     </div>
@@ -465,11 +466,11 @@
               {currentStep === 4 && (
                 <div className="space-y-6">
                   <div className="space-y-1">
-                    <h2 className="text-2xl font-black text-stone-900 flex items-center gap-2">
+                    <h2 className="text-2xl font-extrabold text-stone-900 flex items-center gap-2">
                       <span>🌏</span>
                       <span>災害來了，都要往同一個地方嗎？</span>
                     </h2>
-                    <p className="text-xs text-stone-600">點選不同災害，學習最正確的避難小常識！</p>
+                    <p className="text-xs text-stone-600 font-normal">點選不同災害，學習最正確的避難小常識！</p>
                   </div>
 
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -477,8 +478,8 @@
                       <button
                         key={h.id}
                         onClick={() => { setSelectedHazard(h); setQuizAnswer(null); }}
-                        className={`p-4 rounded-2xl border-2 text-xs font-bold transition cute-btn flex flex-col items-center gap-2 ${
-                          selectedHazard.id === h.id ? 'bg-orange-500 text-white border-orange-500 shadow-md' : 'bg-white text-stone-800 border-amber-200 hover:bg-amber-50'
+                        className={`p-4 rounded-2xl border text-xs font-medium transition cute-btn flex flex-col items-center gap-2 ${
+                          selectedHazard.id === h.id ? 'bg-orange-500 text-white border-orange-500 shadow-md font-bold' : 'bg-white text-stone-800 border-amber-200 hover:bg-amber-50'
                         }`}
                       >
                         <span className="text-3xl">{h.icon}</span>
@@ -488,18 +489,18 @@
                   </div>
 
                   <div className="bubble-card p-6 space-y-4">
-                    <div className="flex items-center gap-2 font-black text-lg text-stone-900">
+                    <div className="flex items-center gap-2 font-bold text-lg text-stone-900">
                       <span>{selectedHazard.icon}</span>
                       <span>{selectedHazard.name} - 核心防護觀念</span>
                     </div>
 
-                    <div className="bg-amber-50 p-4 rounded-2xl border border-amber-200 text-xs text-amber-950 font-bold leading-relaxed">
+                    <div className="bg-amber-50 p-4 rounded-2xl border border-amber-200 text-xs text-amber-950 font-normal leading-relaxed">
                       🧭 應變原則：{selectedHazard.keyPrinciple}
                     </div>
 
                     {/* Quiz */}
                     <div className="space-y-3 pt-2">
-                      <div className="font-extrabold text-sm text-stone-900">❓ 情境動動腦：{selectedHazard.quizQuestion.title}</div>
+                      <div className="font-bold text-sm text-stone-900">❓ 情境動動腦：{selectedHazard.quizQuestion.title}</div>
                       <div className="space-y-2">
                         {selectedHazard.quizQuestion.options.map(opt => {
                           const isSel = quizAnswer === opt.id;
@@ -507,14 +508,14 @@
                             <div key={opt.id} className="space-y-1">
                               <button
                                 onClick={() => setQuizAnswer(opt.id)}
-                                className={`w-full text-left p-3 rounded-2xl border-2 text-xs font-bold transition cute-btn ${
-                                  isSel ? (opt.isCorrect ? 'bg-emerald-100 border-emerald-500 text-emerald-950' : 'bg-orange-100 border-orange-400 text-orange-950') : 'bg-stone-50 border-stone-200 text-stone-800 hover:bg-stone-100'
+                                className={`w-full text-left p-3 rounded-2xl border text-xs font-normal transition cute-btn ${
+                                  isSel ? (opt.isCorrect ? 'bg-emerald-100 border-emerald-500 text-emerald-950 font-medium' : 'bg-orange-100 border-orange-400 text-orange-950 font-medium') : 'bg-stone-50 border-stone-200 text-stone-800 hover:bg-stone-100'
                                 }`}
                               >
                                 {opt.label}
                               </button>
                               {isSel && (
-                                <div className={`p-3 rounded-xl text-xs font-semibold ${opt.isCorrect ? 'bg-emerald-200 text-emerald-950' : 'bg-orange-100 text-orange-950'}`}>
+                                <div className={`p-3 rounded-xl text-xs font-normal ${opt.isCorrect ? 'bg-emerald-100 text-emerald-950' : 'bg-orange-100 text-orange-950'}`}>
                                   {opt.explanation}
                                 </div>
                               )}
@@ -531,11 +532,11 @@
               {currentStep === 5 && (
                 <div className="space-y-6">
                   <div className="space-y-1">
-                    <h2 className="text-2xl font-black text-stone-900 flex items-center gap-2">
+                    <h2 className="text-2xl font-extrabold text-stone-900 flex items-center gap-2">
                       <span>📍</span>
                       <span>發生事情時，我們要去哪裡？</span>
                     </h2>
-                    <p className="text-xs text-stone-600">區分地震收容處所與防空避難處所！</p>
+                    <p className="text-xs text-stone-600 font-normal">區分地震收容處所與防空避難處所！</p>
                   </div>
 
                   <div className="bubble-card p-5 space-y-3">
@@ -549,9 +550,9 @@
                         <div key={loc.id} className="p-3 bg-stone-50 rounded-2xl border border-stone-200 flex justify-between items-center">
                           <div>
                             <div className="font-bold text-stone-900">{loc.name}</div>
-                            <div className="text-stone-500">{loc.address}</div>
+                            <div className="text-stone-500 font-normal">{loc.address}</div>
                           </div>
-                          <span className="bg-orange-100 text-orange-900 font-bold px-3 py-1 rounded-full text-[11px]">
+                          <span className="bg-orange-100 text-orange-900 font-medium px-3 py-1 rounded-full text-[11px]">
                             {loc.type === 'air_raid' ? '防空處所' : '避難收容處所'}
                           </span>
                         </div>
@@ -565,42 +566,42 @@
               {currentStep === 6 && (
                 <div className="space-y-6">
                   <div className="space-y-1">
-                    <h2 className="text-2xl font-black text-stone-900 flex items-center gap-2">
+                    <h2 className="text-2xl font-extrabold text-stone-900 flex items-center gap-2">
                       <span>🤝</span>
                       <span>如果家人走散了，怎麼辦？</span>
                     </h2>
-                    <p className="text-xs text-stone-600">約定好實體集合點與通訊備案，手機沒訊號也不怕！</p>
+                    <p className="text-xs text-stone-600 font-normal">約定好實體集合點與通訊備案，手機沒訊號也不怕！</p>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="bubble-card p-5 space-y-3 text-xs">
-                      <div className="font-extrabold text-stone-900 text-sm">📍 第一家庭集合點</div>
+                      <div className="font-bold text-stone-900 text-sm">📍 第一家庭集合點</div>
                       <input
                         type="text"
                         value={primaryPoint}
                         onChange={(e) => setPrimaryPoint(e.target.value)}
-                        className="w-full p-3 bg-stone-50 border-2 border-stone-200 rounded-xl font-bold focus:border-orange-400 focus:outline-hidden"
+                        className="w-full p-3 bg-stone-50 border border-stone-200 rounded-xl font-normal focus:border-orange-400 focus:outline-hidden"
                       />
                     </div>
 
                     <div className="bubble-card p-5 space-y-3 text-xs">
-                      <div className="font-extrabold text-stone-900 text-sm">🏫 第二家庭集合點 (備用)</div>
+                      <div className="font-bold text-stone-900 text-sm">🏫 第二家庭集合點 (備用)</div>
                       <input
                         type="text"
                         value={secondaryPoint}
                         onChange={(e) => setSecondaryPoint(e.target.value)}
-                        className="w-full p-3 bg-stone-50 border-2 border-stone-200 rounded-xl font-bold focus:border-orange-400 focus:outline-hidden"
+                        className="w-full p-3 bg-stone-50 border border-stone-200 rounded-xl font-normal focus:border-orange-400 focus:outline-hidden"
                       />
                     </div>
                   </div>
 
-                  <div className="bg-amber-50 p-5 rounded-3xl border-2 border-amber-300 space-y-2 text-xs">
-                    <div className="font-extrabold text-orange-950">🧠 通訊中斷情境默契：</div>
+                  <div className="bg-amber-50 p-5 rounded-3xl border border-amber-300 space-y-2 text-xs">
+                    <div className="font-bold text-orange-950">🧠 通訊中斷情境默契：</div>
                     <textarea
                       rows={3}
                       value={thoughtAnswer}
                       onChange={(e) => setThoughtAnswer(e.target.value)}
-                      className="w-full p-3 bg-white border-2 border-amber-200 rounded-2xl font-semibold text-stone-800 focus:outline-hidden"
+                      className="w-full p-3 bg-white border border-amber-200 rounded-2xl font-normal text-stone-800 focus:outline-hidden"
                     />
                   </div>
                 </div>
@@ -609,21 +610,21 @@
               {/* PAGE 7: FINAL REPORT */}
               {currentStep === 7 && (
                 <div className="bubble-card p-6 md:p-8 space-y-6">
-                  <div className="border-b-2 border-amber-100 pb-4 text-center md:text-left space-y-1">
+                  <div className="border-b border-amber-100 pb-4 text-center md:text-left space-y-1">
                     <span className="text-3xl">🛡️</span>
-                    <h2 className="text-2xl md:text-3xl font-black text-stone-900">我們的家庭安全避難計畫書</h2>
-                    <p className="text-xs text-stone-500">完成時間：{new Date().toLocaleDateString('zh-TW')} ｜ 參照《臺灣全民安全指引》小橘書</p>
+                    <h2 className="text-2xl md:text-3xl font-extrabold text-stone-900">我們的家庭安全避難計畫書</h2>
+                    <p className="text-xs text-stone-500 font-normal">完成時間：{new Date().toLocaleDateString('zh-TW')} ｜ 參照《臺灣全民安全指引》小橘書</p>
                   </div>
 
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-center text-xs font-bold">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-center text-xs font-medium">
                     <div className="bg-amber-50 p-3 rounded-2xl border border-amber-200">👨‍👩‍👧‍👦 全家成員：{members.length} 位</div>
                     <div className="bg-amber-50 p-3 rounded-2xl border border-amber-200">🎒 避難包：{weightInfo.totalKg} kg</div>
                     <div className="bg-amber-50 p-3 rounded-2xl border border-amber-200">📍 第一集合點：有設</div>
                     <div className="bg-amber-50 p-3 rounded-2xl border border-amber-200">🛡️ 診斷狀況：🟢 超棒</div>
                   </div>
 
-                  <div className="space-y-3 text-xs">
-                    <div className="font-extrabold text-stone-900 border-b pb-1">📍 集合約定紀錄：</div>
+                  <div className="space-y-3 text-xs font-normal">
+                    <div className="font-bold text-stone-900 border-b pb-1 text-sm">📍 集合約定紀錄：</div>
                     <div className="bg-stone-50 p-3 rounded-2xl space-y-1">
                       <div>第一集合點：<strong>{primaryPoint}</strong></div>
                       <div>第二集合點：<strong>{secondaryPoint}</strong></div>
@@ -633,7 +634,7 @@
 
                   <button
                     onClick={() => window.print()}
-                    className="cute-btn w-full py-4 bg-orange-500 hover:bg-orange-600 text-white font-black text-base md:text-lg shadow-lg cursor-pointer flex items-center justify-center gap-2"
+                    className="cute-btn w-full py-4 bg-orange-500 hover:bg-orange-600 text-white font-bold text-base md:text-lg shadow-md cursor-pointer flex items-center justify-center gap-2"
                   >
                     <span>🖨️ 列印 / 另存為 PDF (帶回家貼冰箱！)</span>
                   </button>
@@ -642,12 +643,12 @@
             </main>
 
             {/* Bottom Floating Navigation */}
-            <footer className="sticky bottom-0 bg-white/95 border-t-2 border-amber-200 p-3.5 backdrop-blur-md z-30 shadow-lg">
+            <footer className="sticky bottom-0 bg-white/95 border-t border-amber-200 p-3.5 backdrop-blur-md z-30 shadow-md">
               <div className="max-w-4xl mx-auto flex items-center justify-between gap-3">
                 {currentStep > 0 ? (
                   <button
                     onClick={() => { setCurrentStep(currentStep - 1); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                    className="cute-btn px-5 py-3 border-2 border-stone-300 text-stone-700 bg-white hover:bg-stone-50 text-xs font-extrabold shadow-2xs cursor-pointer"
+                    className="cute-btn px-5 py-2.5 border border-stone-300 text-stone-700 bg-white hover:bg-stone-50 text-xs font-medium cursor-pointer"
                   >
                     ← 上一步
                   </button>
@@ -656,7 +657,7 @@
                 {currentStep < 7 && (
                   <button
                     onClick={() => { setCurrentStep(currentStep + 1); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                    className="cute-btn ml-auto px-7 py-3 bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white font-extrabold text-sm md:text-base shadow-md cursor-pointer flex items-center gap-1.5"
+                    className="cute-btn ml-auto px-7 py-2.5 bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white font-bold text-sm md:text-base shadow-md cursor-pointer flex items-center gap-1.5"
                   >
                     <span>下一步 →</span>
                   </button>
