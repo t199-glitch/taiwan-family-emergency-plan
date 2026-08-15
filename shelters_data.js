@@ -1,5 +1,16 @@
 ﻿window.MOI_PARSED_SHELTERS = [
     {
+        "county":  "臺中市",
+        "district":  "東區",
+        "name":  "市立樂業國民小學 🏫",
+        "address":  "臺中市東區樂業路60號",
+        "cap":  "1,500人",
+        "type":  "shelter",
+        "lat":  24.138048674795467,
+        "lng":  120.6949602390905,
+        "source":  "官方精準座標"
+    },
+    {
         "county":  "新竹縣",
         "district":  "",
         "name":  "五峰活動中心",

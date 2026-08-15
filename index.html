@@ -341,6 +341,12 @@
           return () => clearTimeout(timer);
         }, [currentStep, selectedCounty]);
 
+        const ALL_TAIWAN_SHELTERS = [
+          // 臺中市
+          { county: '臺中市', district: '東區', name: '市立樂業國民小學 🏫', address: '臺中市東區樂業路60號', cap: '1,500人', type: 'shelter', lat: 24.138048674795467, lng: 120.6949602390905, source: '官方精準座標驗證' },
+          { county: '臺中市', district: '北區', name: '臺中一中避難收容處所 🏫', address: '臺中市北區育才街2號', cap: '3,000人', type: 'shelter', lat: 24.1495, lng: 120.6860, source: '內政部 MOI 避難收容處所點位檔' }
+        ];
+
         const STEPS = [
           { id: 0, label: '首頁', icon: '🏠' },
           { id: 1, label: '認識家人', icon: '👨‍👩‍👧‍👦' },
