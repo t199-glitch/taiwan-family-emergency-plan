@@ -5,13 +5,13 @@
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛡️</text></svg>" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
-    <title>🛡️ 我的家庭安全避難計畫 | 跟著小橘書一步一步做好準備</title>
-    <meta name="description" content="引導臺灣高中生閱讀《臺灣全民安全指引》（小橘書），一步一步建立專屬家庭避難包物資、安全避難地圖與家庭集合計畫。" />
+    <title>🛡️ 我的家庭安全避難計畫 | 跟著小橘書做準備</title>
+    <meta name="description" content="引導臺灣高中生與家人一起閱讀《臺灣全民安全指引》（小橘書），一步一步建立專屬可愛又實用的家庭避難計畫。" />
     
-    <!-- Google Fonts -->
+    <!-- Google Fonts: Rounded & Friendly Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=M+PLUS+Rounded+1c:wght@400;700;800&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
 
     <!-- React 18 & Babel Standalone CDN -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
@@ -36,7 +36,19 @@
                 700: '#b45309',
                 800: '#92400e',
                 900: '#78350f',
+              },
+              peach: {
+                50: '#fff7ed',
+                100: '#ffedd5',
+                200: '#fed7aa',
+                300: '#fdba74',
+                400: '#fb923c',
+                500: '#f97316',
               }
+            },
+            borderRadius: {
+              '4xl': '2rem',
+              '5xl': '2.5rem',
             }
           }
         }
@@ -44,121 +56,127 @@
     </script>
     <style>
       body {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
-        background-color: #fafaf9;
-        color: #1c1917;
+        font-family: "M PLUS Rounded 1c", "Fredoka", "Noto Sans TC", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background-color: #fffdfa;
+        color: #292524;
+      }
+      .bubble-card {
+        background: white;
+        border-radius: 1.75rem;
+        border: 2.5px solid #fed7aa;
+        box-shadow: 0 8px 24px -4px rgba(251, 146, 60, 0.08);
+        transition: all 0.25s ease-in-out;
+      }
+      .bubble-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 28px -4px rgba(251, 146, 60, 0.15);
+        border-color: #fb923c;
+      }
+      .cute-btn {
+        border-radius: 9999px;
+        transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      .cute-btn:hover {
+        transform: scale(1.04);
+      }
+      .cute-btn:active {
+        transform: scale(0.96);
       }
       @media print {
-        header, footer, nav, button, .print-hidden {
-          display: none !important;
-        }
+        header, footer, nav, button, .print-hidden { display: none !important; }
       }
       .scrollbar-none::-webkit-scrollbar { display: none; }
       .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
   </head>
-  <body className="bg-stone-50 text-stone-900 antialiased">
+  <body className="bg-[#fffdfa] text-stone-800 antialiased selection:bg-amber-200">
     <div id="root"></div>
 
     <script type="text/babel">
       const { useState, useEffect, createContext, useContext } = React;
 
-      // 1. DATA MODELS & CONSTANTS
-      const STORAGE_KEY = 'my_family_safety_plan_v1';
-
+      // 1. DATA & CONSTANTS
       const OFFICIAL_BOOK_INFO = {
-        title: '《臺灣全民安全指引》（俗稱小橘書）',
+        title: '《臺灣全民安全指引》（小橘書）',
         publisher: '中華民國國防部全民防衛動員署 / 內政部消防署',
-        summary: '本指引為我國針對各類自然災害（地震、風災、海嘯）及空襲、軍事危機時之全民安全應變指南。',
         officialUrl: 'https://aod.mnd.gov.tw/'
       };
 
       const HAZARD_SCENARIOS = [
         {
           id: 'earthquake',
-          name: '地震',
+          name: '地震搖晃',
           icon: '🌏',
-          category: 'natural',
-          shortDesc: '地震發生極為迅速，應立即採取「趴下、掩護、穩住」保護頭頸部。',
-          keyPrinciple: '室內就地避難，遠離玻璃與掉落物；搖晃停止後再巡檢瓦斯電源，必要時攜避難包前往開闊避難點。',
+          shortDesc: '地震搖晃極迅速，第一時間要趴下掩護！',
+          keyPrinciple: '趴下 (Drop)、掩護 (Cover)、穩住 (Hold on)，保護頭頸部最要緊！',
           quizQuestion: {
-            title: '強烈地震正在搖晃，你當時人在室內，第一時間你該怎麼做？',
-            scenario: '地面劇烈搖晃，吊燈與櫃子上物品開始傾倒！',
+            title: '強烈地震搖晃時，你在家裡房間第一時間要怎麼做？',
             options: [
-              { id: 'a', label: '立即搭乘電梯或衝出大樓外', isCorrect: false, explanation: '再想想看！搖晃時強行移動容易被掉落物品砸傷，且電梯極可能因停電停擺而困住。' },
-              { id: 'b', label: '立即趴下、掩護於堅固桌下，抓住桌腳保護頭頸', isCorrect: true, explanation: '答對了！「趴下 (Drop)、掩護 (Cover)、穩住 (Hold on)」是國際公認地震瞬間最安全姿勢。' },
-              { id: 'c', label: '跑去開大門並站在門框下', isCorrect: false, explanation: '再想想看！現代建築門框並不比室內其他結構更堅固，桌下掩護才是最佳選擇！' }
+              { id: 'a', label: '急忙搭電梯或往外狂奔', isCorrect: false, explanation: '答錯囉！搖晃時強行移動容易跌倒或被物品砸傷，電梯也可能停電受困！' },
+              { id: 'b', label: '立刻趴下、躲在堅固桌子下，抓緊桌腳', isCorrect: true, explanation: '完全正確！趴下、掩護、穩住是國際公認防護黃金原則！✨' },
+              { id: 'c', label: '跑去站在大門底下', isCorrect: false, explanation: '再想想看～門框不一定更安全，桌下掩護保護頭頸才是好選擇！' }
             ]
-          },
-          officialChapterUrl: 'https://aod.mnd.gov.tw/'
+          }
         },
         {
           id: 'typhoon_flood',
-          name: '颱風與豪雨淹水',
+          name: '豪雨淹水',
           icon: '🌧️',
           category: 'natural',
-          shortDesc: '豪雨易引發積淹水與道路中斷，應隨時留意發布之警戒資訊。',
-          keyPrinciple: '預先清理排水孔與裝設防水閘門；若發布強制撤離，應提早依官方指引前往高處或收容所。',
+          shortDesc: '豪雨淹水升溫時，切勿滯留地下室。',
+          keyPrinciple: '切斷電源瓦斯，提早攜避難包往二樓以上或高處收容所撤離！',
           quizQuestion: {
-            title: '低窪地區發布豪雨淹水警戒，且水深已開始上升至腳踝，你會怎麼做？',
-            scenario: '外面雨勢極大，道路已有積水現象。',
+            title: '積水已經開始漫過腳踝，家門口雨很大該怎麼辦？',
             options: [
-              { id: 'a', label: '繼續留在地下室清理積水物品', isCorrect: false, explanation: '再想想看！地下室極易因瞬間暴雨淹沒出口，積水時絕不可滯留地下室！' },
-              { id: 'b', label: '關閉水電瓦斯總開關，提早攜避難包前往二樓以上或指定的避難處所', isCorrect: true, explanation: '答對了！淹水時應避免徒步涉水過深道路，預先切斷電源並往高處撤離是最安全的做法。' }
+              { id: 'a', label: '繼續待在地下室清理水溝', isCorrect: false, explanation: '不可以喔！地下室瞬間暴雨積水極危險，絕對不可逗留！' },
+              { id: 'b', label: '關水電總開關，帶避難包前往高處或指定收容所', isCorrect: true, explanation: '太棒了！關電源、往高處安全撤離最棒！' }
             ]
-          },
-          officialChapterUrl: 'https://aod.mnd.gov.tw/'
+          }
         },
         {
           id: 'tsunami',
-          name: '海嘯',
+          name: '海嘯來襲',
           icon: '🌊',
-          category: 'natural',
-          shortDesc: '沿海地區強震後或收到海嘯警報時，時間就是生命！',
-          keyPrinciple: '海嘯避難三原則：「往高處、往內陸、立即行動」。不要留在海岸邊觀浪。',
+          shortDesc: '海岸區遇到強震，時間就是生命！',
+          keyPrinciple: '海嘯三原則：「往高處、往內陸、立即行動」！不要去海邊觀浪！',
           quizQuestion: {
-            title: '若你在海岸邊旅遊時感受到強烈地震，或聽到海嘯警報聲響起？',
-            scenario: '海岸水面出現異常快速退潮或巨大浪聲。',
+            title: '去海邊玩聽到海嘯警報聲響起時？',
             options: [
-              { id: 'a', label: '走向海灘觀察海水是否有異常退潮', isCorrect: false, explanation: '再想想看！海嘯波速極快，看到巨浪時通常已來不及逃跑。絕不能觀浪！' },
-              { id: 'b', label: '立即往高處（海拔20公尺以上或高樓3樓以上）及內陸方向迅速撤離', isCorrect: true, explanation: '答對了！「往高處、往內陸」是海嘯生存黃金法則。' }
+              { id: 'a', label: '跑去海灘看海水有沒有退潮', isCorrect: false, explanation: '千萬不行！巨浪來得極快，絕對不能觀浪！' },
+              { id: 'b', label: '立刻往高處（海拔20m以上或高樓3樓以上）迅速撤離', isCorrect: true, explanation: '答對了！往高處、往內陸是保命法則！' }
             ]
-          },
-          officialChapterUrl: 'https://aod.mnd.gov.tw/'
+          }
         },
         {
           id: 'air_raid',
-          name: '空襲警報',
+          name: '空襲防空',
           icon: '🚨',
-          category: 'human_made',
-          shortDesc: '聽到防空警報（長音15秒、短音5秒）或手機國家級警報時。',
-          keyPrinciple: '室外人員立即進入地下防空避難處所；室內人員切斷電源瓦斯，避開窗戶，採跪姿護頭保護耳膜眼部。',
+          shortDesc: '警報響起時，立刻找尋防空避難處所！',
+          keyPrinciple: '進入無窗地下室或捷運站，採雙膝跪地拱背遮眼耳姿勢保護自己！',
           quizQuestion: {
-            title: '防空警報響起時，如果你正位於家中室內，最正確的防護姿勢與位置是？',
-            scenario: '防空警報聲在大街上響起，伴隨警報訊息。',
+            title: '防空警報響起時，人在室內最佳姿勢是？',
             options: [
-              { id: 'a', label: '站在大陽台或靠窗戶處觀察外面狀況', isCorrect: false, explanation: '再想想看！爆炸衝擊波會震碎窗戶玻璃造成嚴重割傷，空襲時必須遠離所有窗戶！' },
-              { id: 'b', label: '進入無窗戶之房間或地下室，採「雙膝跪地、拱背、雙手遮掩眼耳、嘴巴微張」姿勢', isCorrect: true, explanation: '答對了！這能有效防止震波傷害耳膜與胸腔，並避免玻璃碎片割傷。' }
+              { id: 'a', label: '站在陽台或窗戶邊看外面狀況', isCorrect: false, explanation: '不對喔！衝擊波會震碎玻璃，空襲時一定要遠離窗戶！' },
+              { id: 'b', label: '進入無窗房間或地下室，雙膝跪地拱背遮掩眼耳', isCorrect: true, explanation: '非常正確！這個姿勢可以保護眼耳與胸腔安全！' }
             ]
-          },
-          officialChapterUrl: 'https://aod.mnd.gov.tw/'
+          }
         }
       ];
 
       const MOCK_LOCATIONS = [
-        { id: 'loc_1', name: '臺北市立建國高級中學避難處所', county: '臺北市', address: '臺北市中正區南海路56號', type: 'shelter', capacity: 2500, suitableHazards: ['earthquake', 'typhoon_flood'] },
-        { id: 'loc_2', name: '捷運大安站地下層（防空避難處所）', county: '臺北市', address: '臺北市大安區信義路四段2號B1', type: 'air_raid', capacity: 4000, suitableHazards: ['air_raid'] },
-        { id: 'loc_3', name: '臺中市立臺中第一高級中等學校避難處所', county: '臺中市', address: '臺中市北區育才街2號', type: 'shelter', capacity: 3000, suitableHazards: ['earthquake', 'typhoon_flood'] },
-        { id: 'loc_4', name: '高雄市立高雄高級中學避難處所', county: '高雄市', address: '高雄市三民區建國三路50號', type: 'shelter', capacity: 2800, suitableHazards: ['earthquake', 'typhoon_flood'] }
+        { id: 'loc_1', name: '建國高級中學避難收容處所 🏫', address: '臺北市中正區南海路56號', type: 'shelter', capacity: '2,500 人' },
+        { id: 'loc_2', name: '捷運大安站地下防空避難處所 🚇', address: '臺北市大安區信義路四段2號B1', type: 'air_raid', capacity: '4,000 人' },
+        { id: 'loc_3', name: '臺中一中避難收容處所 🏫', address: '臺中市北區育才街2號', type: 'shelter', capacity: '3,000 人' },
+        { id: 'loc_4', name: '高雄高級中學避難處所 🏫', address: '高雄市三民區建國三路50號', type: 'shelter', capacity: '2,800 人' }
       ];
 
       const DEFAULT_GO_BAG = [
-        { id: 'item_1', name: '個人飲用水 (3日份)', quantity: 1, estimatedWeightKg: 3.15, category: 'water', note: '體重x15mlx3天' },
-        { id: 'item_2', name: '高熱量耐保存乾糧', quantity: 3, estimatedWeightKg: 1.2, category: 'food' },
-        { id: 'item_3', name: '家庭急救包 (OK繃/消毒)', quantity: 1, estimatedWeightKg: 0.4, category: 'medical' },
-        { id: 'item_4', name: 'LED手電筒 (含備用電池)', quantity: 1, estimatedWeightKg: 0.25, category: 'tools' },
-        { id: 'item_5', name: '高分貝求救哨', quantity: 1, estimatedWeightKg: 0.05, category: 'tools' },
-        { id: 'item_6', name: '保暖救生毯', quantity: 1, estimatedWeightKg: 0.2, category: 'warmth' }
+        { id: 'item_1', name: '💧 個人專屬飲用水 (3日份)', quantity: 1, estimatedWeightKg: 3.15, note: '依體重x15mlx3天算出來的量！' },
+        { id: 'item_2', name: '🍙 耐保存餅乾 / 能量棒', quantity: 3, estimatedWeightKg: 1.2 },
+        { id: 'item_3', name: '🩹 家庭急救包 (OK繃/紗布)', quantity: 1, estimatedWeightKg: 0.4 },
+        { id: 'item_4', name: '🔦 LED手電筒 (含電池)', quantity: 1, estimatedWeightKg: 0.25 },
+        { id: 'item_5', name: '📣 高分貝求救小哨子', quantity: 1, estimatedWeightKg: 0.05 },
+        { id: 'item_6', name: '🧥 輕量保暖毯 / 雨衣', quantity: 1, estimatedWeightKg: 0.2 }
       ];
 
       // 2. HELPER FUNCTIONS
@@ -181,187 +199,467 @@
       function App() {
         const [currentStep, setCurrentStep] = useState(0);
         const [members, setMembers] = useState([
-          { id: 'm1', relation: '我', customName: '我', age: 17, gender: 'male', height: 175, weight: 70, specialNeeds: [] }
+          { id: 'm1', relation: '我', customName: '我', age: 17, gender: 'male', height: 175, weight: 70, avatar: '👦', specialNeeds: [] }
         ]);
         const [goBagItems, setGoBagItems] = useState(DEFAULT_GO_BAG);
-        const [primaryPoint, setPrimaryPoint] = useState('住家附近OO公園正門');
-        const [secondaryPoint, setSecondaryPoint] = useState('OO國民小學體育館大門');
-        const [thoughtAnswer, setThoughtAnswer] = useState('若爸爸在公司、媽媽在家、我在學校，且手機完全無訊號，我們約定在「住家附近OO公園」正門告示牌集合。');
+        const [primaryPoint, setPrimaryPoint] = useState('住家附近的公園正門告示牌');
+        const [secondaryPoint, setSecondaryPoint] = useState('附近的國民小學司令台');
+        const [thoughtAnswer, setThoughtAnswer] = useState('如果爸媽在上班、我在上課且網路斷訊，我們約定放學後在住家公園正門大樹下集合。');
         const [selectedHazard, setSelectedHazard] = useState(HAZARD_SCENARIOS[0]);
-        const [quizSelection, setQuizSelection] = useState(null);
+        const [quizAnswer, setQuizAnswer] = useState(null);
 
         const activeMember = members[0];
         const waterInfo = calculateWaterRequirement(activeMember.weight);
         const weightInfo = calculateBagWeight(activeMember, goBagItems);
 
+        const STEPS = [
+          { id: 0, label: '首頁', icon: '🏠' },
+          { id: 1, label: '認識家人', icon: '👨‍👩‍👧‍👦' },
+          { id: 2, label: '讀小橘書', icon: '📖' },
+          { id: 3, label: '避難包', icon: '🎒' },
+          { id: 4, label: '認識災害', icon: '🌏' },
+          { id: 5, label: '避難地圖', icon: '📍' },
+          { id: 6, label: '家庭約定', icon: '🤝' },
+          { id: 7, label: '完成計畫', icon: '🛡️' }
+        ];
+
+        const addFamilyMember = (rel, avatar) => {
+          setMembers([...members, {
+            id: `m_${Date.now()}`,
+            relation: rel,
+            customName: rel,
+            age: rel === '爸爸' || rel === '媽媽' ? 45 : rel === '阿嬤' || rel === '阿公' ? 70 : 15,
+            gender: 'female',
+            height: 160,
+            weight: 55,
+            avatar: avatar,
+            specialNeeds: []
+          }]);
+        };
+
         return (
           <div className="min-h-screen flex flex-col justify-between">
             {/* Header Progress Bar */}
-            <header className="bg-amber-50/90 border-b border-amber-200 sticky top-0 z-40 p-3 backdrop-blur-md">
+            <header className="bg-amber-100/80 border-b-2 border-amber-300/80 sticky top-0 z-40 p-3 backdrop-blur-md">
               <div className="max-w-5xl mx-auto flex items-center justify-between">
-                <button onClick={() => setCurrentStep(0)} className="font-black text-amber-900 text-lg flex items-center gap-1.5 cursor-pointer">
-                  <span>🛡️</span>
+                <button onClick={() => setCurrentStep(0)} className="font-extrabold text-amber-950 text-base md:text-lg flex items-center gap-2 cursor-pointer hover:opacity-80">
+                  <span className="text-2xl">🛡️</span>
                   <span>我的家庭安全避難計畫</span>
                 </button>
-                <div className="text-xs text-amber-800 font-semibold bg-amber-100 px-3 py-1 rounded-full">
-                  STEP {currentStep} / 7：{['首頁', '認識家人', '小橘書導讀', '避難包計算', '認識災害', '避難地圖', '家庭約定', '完成計畫'][currentStep]}
+
+                <div className="bg-amber-500 text-white font-bold text-xs px-3.5 py-1.5 rounded-full shadow-xs flex items-center gap-1.5">
+                  <span>{STEPS[currentStep].icon}</span>
+                  <span>STEP {currentStep} / 7：{STEPS[currentStep].label}</span>
                 </div>
+              </div>
+
+              {/* Progress Line */}
+              <div className="max-w-5xl mx-auto w-full bg-amber-200 h-2 rounded-full mt-2 overflow-hidden">
+                <div className="bg-orange-500 h-full transition-all duration-300 rounded-full" style={{ width: `${(currentStep / 7) * 100}%` }}></div>
               </div>
             </header>
 
-            {/* Page Content */}
-            <main className="max-w-4xl mx-auto p-4 flex-1 w-full space-y-6">
+            {/* Page Main Content */}
+            <main className="max-w-4xl mx-auto p-4 md:p-6 flex-1 w-full space-y-6">
+              {/* PAGE 0: HERO */}
               {currentStep === 0 && (
-                <div className="bg-linear-to-b from-amber-100/50 to-white p-8 rounded-3xl border border-amber-200 text-center space-y-6">
-                  <div className="inline-block bg-amber-100 text-amber-900 text-xs font-bold px-3 py-1 rounded-full">
-                    📖 參照《臺灣全民安全指引》（小橘書）設計
-                  </div>
-                  <h1 className="text-3xl md:text-5xl font-black text-stone-900">🏠 和家人一起，做好安全準備</h1>
-                  <p className="text-stone-700 max-w-lg mx-auto text-sm md:text-base">跟著小橘書，一步一步建立屬於你們家的安全避難計畫。</p>
-                  
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-2xl mx-auto text-xs font-bold">
-                    <div className="bg-white p-4 rounded-2xl border border-stone-200">🎒 準備什麼</div>
-                    <div className="bg-white p-4 rounded-2xl border border-stone-200">📍 去哪裡</div>
-                    <div className="bg-white p-4 rounded-2xl border border-stone-200">🧭 怎麼避難</div>
-                    <div className="bg-white p-4 rounded-2xl border border-stone-200">👨‍👩‍👧‍👦 家人互相照顧</div>
+                <div className="space-y-6 text-center py-4">
+                  <div className="bg-linear-to-b from-orange-100 via-amber-50 to-white p-8 md:p-12 rounded-[2.5rem] border-3 border-orange-200 shadow-sm space-y-6">
+                    <div className="inline-flex items-center gap-1.5 bg-orange-500 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-xs">
+                      <span>✨ 根據《臺灣全民安全指引》（小橘書）設計</span>
+                    </div>
+
+                    <h1 className="text-3xl md:text-5xl font-black text-stone-900 leading-tight">
+                      🏠 和家人一起，做好安全準備！
+                    </h1>
+
+                    <p className="text-stone-700 max-w-lg mx-auto text-sm md:text-base leading-relaxed font-semibold">
+                      跟著小橘書的可愛步驟，為自己與爸爸媽媽阿嬤一起打造專屬的家庭避難小計畫 🎒
+                    </p>
+
+                    {/* 4 Feature Cards */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-2xl mx-auto text-xs font-extrabold text-stone-800">
+                      <div className="bg-white p-4 rounded-2xl border-2 border-amber-200 shadow-2xs">🎒 準備什麼</div>
+                      <div className="bg-white p-4 rounded-2xl border-2 border-amber-200 shadow-2xs">📍 去哪避難</div>
+                      <div className="bg-white p-4 rounded-2xl border-2 border-amber-200 shadow-2xs">🧭 怎麼防護</div>
+                      <div className="bg-white p-4 rounded-2xl border-2 border-amber-200 shadow-2xs">👨‍👩‍👧‍👦 家人照應</div>
+                    </div>
+
+                    <button
+                      onClick={() => setCurrentStep(1)}
+                      className="cute-btn px-8 py-4 bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white font-black text-lg md:text-xl shadow-lg cursor-pointer inline-flex items-center gap-2"
+                    >
+                      <span>開始建立我們的家庭安全計畫 ➔</span>
+                    </button>
+
+                    <div className="flex justify-center gap-4 text-xs text-stone-500 font-semibold pt-2">
+                      <span>⏱️ 只要 10 分鐘</span>
+                      <span>📱 手機電腦皆可</span>
+                      <span>💾 自動存檔免註冊</span>
+                    </div>
                   </div>
 
-                  <button
-                    onClick={() => setCurrentStep(1)}
-                    className="px-8 py-4 bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-lg rounded-2xl shadow-lg cursor-pointer transition transform active:scale-95"
-                  >
-                    開始建立我的家庭安全計畫 →
-                  </button>
+                  {/* 3 Outcome Cards */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="bubble-card p-5 text-left space-y-2">
+                      <div className="text-3xl">🎒</div>
+                      <h3 className="font-extrabold text-stone-900 text-base">我的家庭物資包</h3>
+                      <p className="text-xs text-stone-600 leading-relaxed">幫每一位家人算出 3 日份飲水與背包重量，準備剛好的東西！</p>
+                    </div>
+
+                    <div className="bubble-card p-5 text-left space-y-2">
+                      <div className="text-3xl">📍</div>
+                      <h3 className="font-extrabold text-stone-900 text-base">我的避難地圖</h3>
+                      <p className="text-xs text-stone-600 leading-relaxed">了解地震、淹水、海嘯與防空時，最適合去的安全地點！</p>
+                    </div>
+
+                    <div className="bubble-card p-5 text-left space-y-2">
+                      <div className="text-3xl">🛡️</div>
+                      <h3 className="font-extrabold text-stone-900 text-base">家庭安全計畫書</h3>
+                      <p className="text-xs text-stone-600 leading-relaxed">把集合點、聯絡方式與物資整理成一張計畫表，帶回家貼冰箱！</p>
+                    </div>
+                  </div>
                 </div>
               )}
 
+              {/* PAGE 1: FAMILY */}
               {currentStep === 1 && (
-                <div className="space-y-4">
-                  <h2 className="text-2xl font-black text-stone-900">👨‍👩‍👧‍👦 先認識我們家</h2>
-                  <p className="text-xs text-stone-600">每個人的需求不一樣，所以每個人的避難準備也不一樣。</p>
-                  
-                  <div className="bg-white p-5 rounded-2xl border border-amber-300 space-y-3">
-                    <div className="flex justify-between font-bold text-stone-900">
-                      <span>👦 {activeMember.customName} ({activeMember.relation})</span>
-                      <span className="text-xs bg-amber-100 text-amber-900 px-2 py-0.5 rounded-md">{activeMember.age}歲 / {activeMember.weight}kg</span>
-                    </div>
-                    <div className="grid grid-cols-2 gap-3 text-xs">
-                      <div>
-                        <label className="block text-stone-600 font-semibold mb-1">身高 (cm)</label>
-                        <input type="number" value={activeMember.height} onChange={(e) => setMembers([{ ...activeMember, height: Number(e.target.value) }])} className="w-full p-2 border rounded-xl" />
+                <div className="space-y-6">
+                  <div className="space-y-1">
+                    <h2 className="text-2xl font-black text-stone-900 flex items-center gap-2">
+                      <span>👨‍👩‍👧‍👦</span>
+                      <span>先認識我們家成員</span>
+                    </h2>
+                    <p className="text-xs text-stone-600">每個人的體重與需求不一樣，所以準備的避難包也不一樣喔！</p>
+                  </div>
+
+                  {/* Member Cards Grid */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {members.map(m => (
+                      <div key={m.id} className="bubble-card p-5 space-y-4">
+                        <div className="flex items-center justify-between border-b border-amber-100 pb-3">
+                          <div className="flex items-center gap-3">
+                            <span className="text-3xl p-2 bg-amber-100 rounded-2xl">{m.avatar || '👤'}</span>
+                            <div>
+                              <h3 className="font-bold text-stone-900 text-base">{m.customName} ({m.relation})</h3>
+                              <p className="text-xs text-stone-500">{m.age} 歲 ｜ 體重 {m.weight} kg</p>
+                            </div>
+                          </div>
+                          <span className="text-xs font-bold text-orange-600 bg-orange-100 px-3 py-1 rounded-full">
+                            {m.relation === '我' ? '主要的你' : '家人成員'}
+                          </span>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-3 text-xs">
+                          <div>
+                            <label className="block text-stone-700 font-bold mb-1">身高 (cm)</label>
+                            <input
+                              type="number"
+                              value={m.height}
+                              onChange={(e) => setMembers(members.map(item => item.id === m.id ? { ...item, height: Number(e.target.value) } : item))}
+                              className="w-full p-2.5 bg-stone-50 border-2 border-stone-200 rounded-xl font-bold focus:border-orange-400 focus:outline-hidden"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-stone-700 font-bold mb-1">體重 (kg)</label>
+                            <input
+                              type="number"
+                              value={m.weight}
+                              onChange={(e) => setMembers(members.map(item => item.id === m.id ? { ...item, weight: Number(e.target.value) } : item))}
+                              className="w-full p-2.5 bg-stone-50 border-2 border-stone-200 rounded-xl font-bold focus:border-orange-400 focus:outline-hidden"
+                            />
+                          </div>
+                        </div>
                       </div>
-                      <div>
-                        <label className="block text-stone-600 font-semibold mb-1">體重 (kg)</label>
-                        <input type="number" value={activeMember.weight} onChange={(e) => setMembers([{ ...activeMember, weight: Number(e.target.value) }])} className="w-full p-2 border rounded-xl" />
-                      </div>
+                    ))}
+                  </div>
+
+                  {/* Add Family Quick Buttons */}
+                  <div className="bg-amber-50/80 p-5 rounded-3xl border-2 border-dashed border-orange-300 text-center space-y-3">
+                    <div className="text-xs font-extrabold text-orange-900">➕ 點擊新增家裡的成員：</div>
+                    <div className="flex flex-wrap justify-center gap-2">
+                      <button onClick={() => addFamilyMember('爸爸', '👨')} className="cute-btn px-4 py-2 bg-white border-2 border-amber-300 text-xs font-bold text-stone-800 shadow-2xs hover:bg-amber-100">＋ 爸爸 👨</button>
+                      <button onClick={() => addFamilyMember('媽媽', '👩')} className="cute-btn px-4 py-2 bg-white border-2 border-amber-300 text-xs font-bold text-stone-800 shadow-2xs hover:bg-amber-100">＋ 媽媽 👩</button>
+                      <button onClick={() => addFamilyMember('阿嬤', '👵')} className="cute-btn px-4 py-2 bg-white border-2 border-amber-300 text-xs font-bold text-stone-800 shadow-2xs hover:bg-amber-100">＋ 阿嬤 👵</button>
+                      <button onClick={() => addFamilyMember('阿公', '👴')} className="cute-btn px-4 py-2 bg-white border-2 border-amber-300 text-xs font-bold text-stone-800 shadow-2xs hover:bg-amber-100">＋ 阿公 👴</button>
+                      <button onClick={() => addFamilyMember('毛孩', '🐕')} className="cute-btn px-4 py-2 bg-white border-2 border-amber-300 text-xs font-bold text-stone-800 shadow-2xs hover:bg-amber-100">＋ 毛孩 🐕</button>
                     </div>
                   </div>
                 </div>
               )}
 
+              {/* PAGE 2: PREPARE */}
               {currentStep === 2 && (
-                <div className="space-y-4">
-                  <h2 className="text-2xl font-black text-stone-900">🎒 避難包，真的只是「裝東西」嗎？</h2>
-                  <div className="bg-amber-50 p-5 rounded-2xl border border-amber-200 space-y-2">
-                    <div className="font-bold text-amber-900">📖 小橘書觀念分辨：</div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
-                      <div className="bg-white p-3 rounded-xl border border-amber-200">
-                        <strong className="text-amber-800">🎒 緊急避難包：</strong>隨身帶走，維持 1～3 天生存基本水份、乾糧與急救物資。
+                <div className="space-y-6">
+                  <div className="space-y-1">
+                    <h2 className="text-2xl font-black text-stone-900 flex items-center gap-2">
+                      <span>🎒</span>
+                      <span>避難包，真的只是「裝東西」嗎？</span>
+                    </h2>
+                    <p className="text-xs text-stone-600">先讀懂小橘書，再開始準備才不會買錯喔！</p>
+                  </div>
+
+                  <div className="bg-amber-50 p-6 rounded-3xl border-2 border-amber-300 space-y-4">
+                    <div className="flex items-center gap-3">
+                      <span className="text-4xl">📖</span>
+                      <div>
+                        <h3 className="font-extrabold text-stone-900 text-lg">小橘書觀念小筆記</h3>
+                        <p className="text-xs text-amber-900 font-medium">區分「隨身帶走的避難包」與「留在家裡的居家儲備」！</p>
                       </div>
-                      <div className="bg-white p-3 rounded-xl border border-amber-200">
-                        <strong className="text-amber-800">🏠 居家儲備：</strong>留在家中，保存 7 天以上的全家糧食與大瓶飲水。
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                      <div className="bg-white p-4 rounded-2xl border-2 border-amber-200 space-y-1">
+                        <div className="font-bold text-orange-600 text-sm">🎒 緊急避難包 (隨身帶)</div>
+                        <p className="text-stone-600">要能機動背著走！保存維持 1～3 天生存基本飲水、乾糧、急救藥物與手電筒。</p>
+                      </div>
+                      <div className="bg-white p-4 rounded-2xl border-2 border-amber-200 space-y-1">
+                        <div className="font-bold text-orange-600 text-sm">🏠 居家儲備 (留在家)</div>
+                        <p className="text-stone-600">留在家中停水停電時使用！保存全家 7 天以上的糧食、大罐水與瓦斯罐。</p>
                       </div>
                     </div>
                   </div>
                 </div>
               )}
 
+              {/* PAGE 3: GO-BAG */}
               {currentStep === 3 && (
-                <div className="space-y-4">
-                  <h2 className="text-2xl font-black text-stone-900">🎒 我的家庭需要準備什麼？</h2>
-                  <div className="bg-white p-6 rounded-3xl border border-stone-200 space-y-4 text-center">
-                    <div className="text-xs font-bold text-stone-500">預估個人背包總重</div>
-                    <div className="text-5xl font-black text-amber-600">{weightInfo.totalKg} kg</div>
-                    <div className="text-xs text-amber-800 bg-amber-50 p-2 rounded-xl">💧 3日專屬水份：{waterInfo.formattedText} (體重 {activeMember.weight}kg × 15ml × 3日)</div>
+                <div className="space-y-6">
+                  <div className="space-y-1">
+                    <h2 className="text-2xl font-black text-stone-900 flex items-center gap-2">
+                      <span>🎒</span>
+                      <span>我的家庭避難包重量計算</span>
+                    </h2>
+                    <p className="text-xs text-stone-600">自動根據體重算水份，幫你把關不背過重！</p>
+                  </div>
+
+                  <div className="bubble-card p-6 text-center space-y-4">
+                    <div className="text-xs font-bold text-stone-500">👦 {activeMember.customName} 的預估背包總重</div>
+                    <div className="text-5xl md:text-6xl font-black text-orange-500">{weightInfo.totalKg} <span className="text-2xl">kg</span></div>
+
+                    <div className="bg-amber-50 p-3 rounded-2xl border border-amber-200 text-xs text-amber-900 font-bold inline-block">
+                      💧 3日專屬水份：{waterInfo.formattedText} (體重 {activeMember.weight}kg × 15ml × 3天)
+                    </div>
+
+                    <div className="text-xs text-stone-500 max-w-md mx-auto">
+                      💡 建議上限：男生約 15 kg / 女生約 10 kg，以能敏捷行走為原則喔！
+                    </div>
+                  </div>
+
+                  {/* Preset Items List */}
+                  <div className="bg-white p-5 rounded-3xl border-2 border-stone-200 space-y-3">
+                    <h3 className="font-extrabold text-stone-900 text-sm border-b pb-2">📋 基本避難包建議清單 (可隨時調整)</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                      {goBagItems.map(item => (
+                        <div key={item.id} className="p-3 bg-stone-50 rounded-2xl border border-stone-200 flex justify-between items-center">
+                          <span className="font-bold text-stone-800">{item.name}</span>
+                          <span className="text-orange-600 font-bold">{(item.estimatedWeightKg * item.quantity).toFixed(2)} kg</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               )}
 
+              {/* PAGE 4: HAZARDS */}
               {currentStep === 4 && (
-                <div className="space-y-4">
-                  <h2 className="text-2xl font-black text-stone-900">🌏 災害來了，都要往同一個地方嗎？</h2>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                <div className="space-y-6">
+                  <div className="space-y-1">
+                    <h2 className="text-2xl font-black text-stone-900 flex items-center gap-2">
+                      <span>🌏</span>
+                      <span>災害來了，都要往同一個地方嗎？</span>
+                    </h2>
+                    <p className="text-xs text-stone-600">點選不同災害，學習最正確的避難小常識！</p>
+                  </div>
+
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                     {HAZARD_SCENARIOS.map(h => (
-                      <button key={h.id} onClick={() => setSelectedHazard(h)} className={`p-3 rounded-xl border text-xs font-bold ${selectedHazard.id === h.id ? 'bg-amber-500 text-white' : 'bg-white'}`}>
-                        {h.icon} {h.name}
+                      <button
+                        key={h.id}
+                        onClick={() => { setSelectedHazard(h); setQuizAnswer(null); }}
+                        className={`p-4 rounded-2xl border-2 text-xs font-bold transition cute-btn flex flex-col items-center gap-2 ${
+                          selectedHazard.id === h.id ? 'bg-orange-500 text-white border-orange-500 shadow-md' : 'bg-white text-stone-800 border-amber-200 hover:bg-amber-50'
+                        }`}
+                      >
+                        <span className="text-3xl">{h.icon}</span>
+                        <span>{h.name}</span>
                       </button>
                     ))}
                   </div>
-                  <div className="bg-white p-5 rounded-2xl border border-stone-200 space-y-3">
-                    <div className="font-bold text-base">{selectedHazard.name} - 核心應變原則</div>
-                    <p className="text-xs text-stone-600">{selectedHazard.keyPrinciple}</p>
-                  </div>
-                </div>
-              )}
 
-              {currentStep === 5 && (
-                <div className="space-y-4">
-                  <h2 className="text-2xl font-black text-stone-900">📍 發生事情時，我們要去哪裡？</h2>
-                  <div className="bg-white p-4 rounded-2xl border space-y-2">
-                    {MOCK_LOCATIONS.map(loc => (
-                      <div key={loc.id} className="p-3 bg-stone-50 rounded-xl flex justify-between items-center text-xs">
-                        <div>
-                          <div className="font-bold">{loc.name}</div>
-                          <div className="text-stone-500">{loc.address}</div>
-                        </div>
-                        <span className="bg-amber-100 text-amber-900 px-2 py-1 rounded font-bold">{loc.type === 'air_raid' ? '防空處所' : '避難處所'}</span>
+                  <div className="bubble-card p-6 space-y-4">
+                    <div className="flex items-center gap-2 font-black text-lg text-stone-900">
+                      <span>{selectedHazard.icon}</span>
+                      <span>{selectedHazard.name} - 核心防護觀念</span>
+                    </div>
+
+                    <div className="bg-amber-50 p-4 rounded-2xl border border-amber-200 text-xs text-amber-950 font-bold leading-relaxed">
+                      🧭 應變原則：{selectedHazard.keyPrinciple}
+                    </div>
+
+                    {/* Quiz */}
+                    <div className="space-y-3 pt-2">
+                      <div className="font-extrabold text-sm text-stone-900">❓ 情境動動腦：{selectedHazard.quizQuestion.title}</div>
+                      <div className="space-y-2">
+                        {selectedHazard.quizQuestion.options.map(opt => {
+                          const isSel = quizAnswer === opt.id;
+                          return (
+                            <div key={opt.id} className="space-y-1">
+                              <button
+                                onClick={() => setQuizAnswer(opt.id)}
+                                className={`w-full text-left p-3 rounded-2xl border-2 text-xs font-bold transition cute-btn ${
+                                  isSel ? (opt.isCorrect ? 'bg-emerald-100 border-emerald-500 text-emerald-950' : 'bg-orange-100 border-orange-400 text-orange-950') : 'bg-stone-50 border-stone-200 text-stone-800 hover:bg-stone-100'
+                                }`}
+                              >
+                                {opt.label}
+                              </button>
+                              {isSel && (
+                                <div className={`p-3 rounded-xl text-xs font-semibold ${opt.isCorrect ? 'bg-emerald-200 text-emerald-950' : 'bg-orange-100 text-orange-950'}`}>
+                                  {opt.explanation}
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
                       </div>
-                    ))}
+                    </div>
                   </div>
                 </div>
               )}
 
+              {/* PAGE 5: MAP */}
+              {currentStep === 5 && (
+                <div className="space-y-6">
+                  <div className="space-y-1">
+                    <h2 className="text-2xl font-black text-stone-900 flex items-center gap-2">
+                      <span>📍</span>
+                      <span>發生事情時，我們要去哪裡？</span>
+                    </h2>
+                    <p className="text-xs text-stone-600">區分地震收容處所與防空避難處所！</p>
+                  </div>
+
+                  <div className="bubble-card p-5 space-y-3">
+                    <div className="font-bold text-sm text-stone-900 flex items-center gap-2">
+                      <span>🟢</span>
+                      <span>推薦之適合避難地點列表</span>
+                    </div>
+
+                    <div className="space-y-2 text-xs">
+                      {MOCK_LOCATIONS.map(loc => (
+                        <div key={loc.id} className="p-3 bg-stone-50 rounded-2xl border border-stone-200 flex justify-between items-center">
+                          <div>
+                            <div className="font-bold text-stone-900">{loc.name}</div>
+                            <div className="text-stone-500">{loc.address}</div>
+                          </div>
+                          <span className="bg-orange-100 text-orange-900 font-bold px-3 py-1 rounded-full text-[11px]">
+                            {loc.type === 'air_raid' ? '防空處所' : '避難收容處所'}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* PAGE 6: FAMILY PLAN */}
               {currentStep === 6 && (
-                <div className="space-y-4">
-                  <h2 className="text-2xl font-black text-stone-900">🤝 如果家人走散了，怎麼辦？</h2>
-                  <div className="bg-white p-5 rounded-2xl border space-y-3 text-xs">
-                    <div>
-                      <label className="font-bold block mb-1">第一家庭集合點</label>
-                      <input type="text" value={primaryPoint} onChange={(e) => setPrimaryPoint(e.target.value)} className="w-full p-2 border rounded-xl" />
+                <div className="space-y-6">
+                  <div className="space-y-1">
+                    <h2 className="text-2xl font-black text-stone-900 flex items-center gap-2">
+                      <span>🤝</span>
+                      <span>如果家人走散了，怎麼辦？</span>
+                    </h2>
+                    <p className="text-xs text-stone-600">約定好實體集合點與通訊備案，手機沒訊號也不怕！</p>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="bubble-card p-5 space-y-3 text-xs">
+                      <div className="font-extrabold text-stone-900 text-sm">📍 第一家庭集合點</div>
+                      <input
+                        type="text"
+                        value={primaryPoint}
+                        onChange={(e) => setPrimaryPoint(e.target.value)}
+                        className="w-full p-3 bg-stone-50 border-2 border-stone-200 rounded-xl font-bold focus:border-orange-400 focus:outline-hidden"
+                      />
                     </div>
-                    <div>
-                      <label className="font-bold block mb-1">第二家庭集合點 (備用)</label>
-                      <input type="text" value={secondaryPoint} onChange={(e) => setSecondaryPoint(e.target.value)} className="w-full p-2 border rounded-xl" />
+
+                    <div className="bubble-card p-5 space-y-3 text-xs">
+                      <div className="font-extrabold text-stone-900 text-sm">🏫 第二家庭集合點 (備用)</div>
+                      <input
+                        type="text"
+                        value={secondaryPoint}
+                        onChange={(e) => setSecondaryPoint(e.target.value)}
+                        className="w-full p-3 bg-stone-50 border-2 border-stone-200 rounded-xl font-bold focus:border-orange-400 focus:outline-hidden"
+                      />
                     </div>
+                  </div>
+
+                  <div className="bg-amber-50 p-5 rounded-3xl border-2 border-amber-300 space-y-2 text-xs">
+                    <div className="font-extrabold text-orange-950">🧠 通訊中斷情境默契：</div>
+                    <textarea
+                      rows={3}
+                      value={thoughtAnswer}
+                      onChange={(e) => setThoughtAnswer(e.target.value)}
+                      className="w-full p-3 bg-white border-2 border-amber-200 rounded-2xl font-semibold text-stone-800 focus:outline-hidden"
+                    />
                   </div>
                 </div>
               )}
 
+              {/* PAGE 7: FINAL REPORT */}
               {currentStep === 7 && (
-                <div className="bg-white p-6 rounded-3xl border border-stone-200 space-y-6">
-                  <div className="border-b pb-3">
-                    <h2 className="text-3xl font-black text-stone-900">🛡️ 我的家庭安全避難計畫書</h2>
-                    <p className="text-xs text-stone-500">更新時間：{new Date().toLocaleDateString('zh-TW')} ｜ 《臺灣全民安全指引》小橘書計畫</p>
+                <div className="bubble-card p-6 md:p-8 space-y-6">
+                  <div className="border-b-2 border-amber-100 pb-4 text-center md:text-left space-y-1">
+                    <span className="text-3xl">🛡️</span>
+                    <h2 className="text-2xl md:text-3xl font-black text-stone-900">我們的家庭安全避難計畫書</h2>
+                    <p className="text-xs text-stone-500">完成時間：{new Date().toLocaleDateString('zh-TW')} ｜ 參照《臺灣全民安全指引》小橘書</p>
                   </div>
-                  <div className="space-y-2 text-xs">
-                    <div>全家成員：<strong>{members.length} 位</strong></div>
-                    <div>第一集合點：<strong>{primaryPoint}</strong></div>
-                    <div>第二集合點：<strong>{secondaryPoint}</strong></div>
-                    <div>個人避難包總重：<strong>{weightInfo.totalKg} kg</strong></div>
+
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-center text-xs font-bold">
+                    <div className="bg-amber-50 p-3 rounded-2xl border border-amber-200">👨‍👩‍👧‍👦 全家成員：{members.length} 位</div>
+                    <div className="bg-amber-50 p-3 rounded-2xl border border-amber-200">🎒 避難包：{weightInfo.totalKg} kg</div>
+                    <div className="bg-amber-50 p-3 rounded-2xl border border-amber-200">📍 第一集合點：有設</div>
+                    <div className="bg-amber-50 p-3 rounded-2xl border border-amber-200">🛡️ 診斷狀況：🟢 超棒</div>
                   </div>
-                  <button onClick={() => window.print()} className="w-full py-3 bg-amber-500 text-white font-bold rounded-2xl">🖨️ 列印 / 另存為 PDF</button>
+
+                  <div className="space-y-3 text-xs">
+                    <div className="font-extrabold text-stone-900 border-b pb-1">📍 集合約定紀錄：</div>
+                    <div className="bg-stone-50 p-3 rounded-2xl space-y-1">
+                      <div>第一集合點：<strong>{primaryPoint}</strong></div>
+                      <div>第二集合點：<strong>{secondaryPoint}</strong></div>
+                      <div>無網路默契：<strong>{thoughtAnswer}</strong></div>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => window.print()}
+                    className="cute-btn w-full py-4 bg-orange-500 hover:bg-orange-600 text-white font-black text-base md:text-lg shadow-lg cursor-pointer flex items-center justify-center gap-2"
+                  >
+                    <span>🖨️ 列印 / 另存為 PDF (帶回家貼冰箱！)</span>
+                  </button>
                 </div>
               )}
             </main>
 
-            {/* Bottom Nav */}
-            <footer className="sticky bottom-0 bg-white/95 border-t p-3 backdrop-blur-md">
-              <div className="max-w-4xl mx-auto flex justify-between gap-3">
-                {currentStep > 0 && (
-                  <button onClick={() => setCurrentStep(currentStep - 1)} className="px-4 py-2.5 border rounded-xl font-bold text-xs">← 上一步</button>
-                )}
+            {/* Bottom Floating Navigation */}
+            <footer className="sticky bottom-0 bg-white/95 border-t-2 border-amber-200 p-3.5 backdrop-blur-md z-30 shadow-lg">
+              <div className="max-w-4xl mx-auto flex items-center justify-between gap-3">
+                {currentStep > 0 ? (
+                  <button
+                    onClick={() => { setCurrentStep(currentStep - 1); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                    className="cute-btn px-5 py-3 border-2 border-stone-300 text-stone-700 bg-white hover:bg-stone-50 text-xs font-extrabold shadow-2xs cursor-pointer"
+                  >
+                    ← 上一步
+                  </button>
+                ) : <div />}
+
                 {currentStep < 7 && (
-                  <button onClick={() => setCurrentStep(currentStep + 1)} className="ml-auto px-6 py-2.5 bg-amber-500 text-white font-bold text-xs rounded-xl shadow-md">下一步 →</button>
+                  <button
+                    onClick={() => { setCurrentStep(currentStep + 1); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                    className="cute-btn ml-auto px-7 py-3 bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white font-extrabold text-sm md:text-base shadow-md cursor-pointer flex items-center gap-1.5"
+                  >
+                    <span>下一步 →</span>
+                  </button>
                 )}
               </div>
             </footer>
